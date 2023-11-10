@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<html>
+<head>
+    <link rel="stylesheet" href="/css/nav_foo.css">
+    <link rel="stylesheet" href="/css/save_login.css">
+    <link rel="icon" href="/images/logo3.png">
+</head>
+
+<div class="header" style="text-align: center;">
+    <a href="/"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+</div>
+
+
+<div class="wrap" style="margin-top: 0px;">
+    <div class="from-wrap">
+        <form action="/member/save" method="post" onsubmit="return validateForm()" id="register" class="input-group">
+            <label class="form-label">캐릭터 선택</label>
+            <div class="form-input" style="width: 400px; margin-top: 10px; margin-bottom: 20px;">
+                <input type="radio" id="bear" name="memberCharacter" value="bear">
+                <label for="bear"><img src="/images/character_bear.png" alt="Character 1" width="50" height="50"></label>
+                <input type="radio" id="cat" name="memberCharacter" value="cat">
+                <label for="cat"><img src="/images/character_cat.png" alt="Character 2" width="50" height="50"></label>
+                <input type="radio" id="dog" name="memberCharacter" value="dog">
+                <label for="dog"><img src="/images/character_dog.png" alt="Character 3" width="50" height="50"></label>
+                <input type="radio" id="rabbit" name="memberCharacter" value="rabbit">
+                <label for="rabbit"><img src="/images/character_rabbit.png" alt="Character 4" width="50" height="50"></label>
+                <input type="radio" id="tiger" name="memberCharacter" value="tiger">
+                <label for="tiger"><img src="/images/character_tiger.png" alt="Character 5" width="50" height="50"></label>
+            </div>
+            <div class="inputgroup">
+                <input type="text" name="memberEmail" id="memberEmail" onblur="emailCheck()" class="input-field" placeholder="이메일을 입력하세요" required>
+                <button type="button" id="emailCheckBtn" onclick="emailCheck()">중복확인</button>
+            </div>
+            <p id="id-check-result"></p>
+            <input type="password" name="memberPassword" id="memberPassword" class="input-field" placeholder="비밀번호를 입력하세요" required>
+
+            <div class="inputgroup">
+                <input type="password" name="confirmPassword" id="confirmPassword" class="input-field" placeholder="비밀번호를 한번 더 입력하세요" required>
+                <button type="button" onclick="passwordCheck()">비밀번호 확인</button>
+            </div>
+            <p id="password-check-result"></p>
+            <input type="text" name="memberName" id="memberName" class="input-field" placeholder="이름을 입력하세요" required>
+            <br><br><label for="memberBirth" name="memberBirth">생년월일</label>
+            <input type="date" name="memberBirth" id="memberBirth" class="input-field"  required>
+            <br><br><label for="memberGrade" name="memberGrade">학년</label>
+            <select name="memberGrade" id="memberGrade">
+                <option value="초등학생">초등학생</option>
+                <option value="중1">중1</option>
+                <option value="중2">중2</option>
+                <option value="중3">중3</option>
+                <option value="고1">고1</option>
+                <option value="고2">고2</option>
+                <option value="고3">고3</option>
+                <option value="성인">성인</option>
+            </select>
+            <p id="total-check-result"></p>
+            <button class="submit" style="font-size: 15px;">회원가입</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+<script th:inline="javascript">
+    const emailCheck = () => {
+        const email = document.getElementById("memberEmail").value;
+        const checkResult = document.getElementById("id-check-result");
+        const totalCheckResult = document.getElementById("total-check-result");
+
+        // 이메일 체크를 시작할 때 total-check-result를 초기화합니다.
+        totalCheckResult.innerHTML = "";
+
+        console.log("입력값: ", email);
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!emailRegex.test(email)) {
+            checkResult.style.color = "red";
+            checkResult.innerHTML = "유효한 이메일 형식이 아닙니다.";
+            disableSubmitButton();
+            return;
+        }
+
+        $.ajax({
+            type: "post",
+            url: "/member/email-check",
+            data: {
+                "memberEmail": email
+            },
+            success: function (res) {
+                console.log("요청성공", res);
+                if (res === "ok") {
+                    console.log("사용가능한 이메일");
+                    checkResult.style.color = "green";
+                    checkResult.innerHTML = "사용가능한 이메일입니다.";
+                    enableSubmitButton();
+                } else {
+                    console.log("이미 사용중인 이메일");
+                    checkResult.style.color = "red";
+                    checkResult.innerHTML = "이미 사용중인 이메일입니다. 다시 입력하세요.";
+                    disableSubmitButton();
+                }
+            },
+            error: function (err) {
+                console.log("에러발생", err);
+            }
+        });
+    };
+
+
+    const passwordCheck = () => {
+        const password = document.getElementById("memberPassword").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        const checkResult = document.getElementById("password-check-result");
+
+        if (password === confirmPassword) {
+            checkResult.style.color = "green";
+            checkResult.innerHTML = "비밀번호가 일치합니다.";
+            enableSubmitButton();
+        } else {
+            checkResult.style.color = "red";
+            checkResult.innerHTML = "비밀번호가 불일치합니다.";
+            disableSubmitButton();
+        }
+    }
+
+    const enableSubmitButton = () => {
+        document.getElementById("submitButton").disabled = false;
+    }
+
+    const disableSubmitButton = () => {
+        document.getElementById("total-check-result").style.color = "red";
+        document.getElementById("total-check-result").innerHTML = "입력하신 정보를 다시 확인해주세요.";
+        document.getElementById("submitButton").disabled = true;
+    }
+
+    const validateForm = () => {
+        return true;
+    }
+</script>
+
+
+</body>
+</html>

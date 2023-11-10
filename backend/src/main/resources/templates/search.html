@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/nav_foo.css">
+    <link rel="stylesheet" type="text/css" href="/css/card.css">
+    <link rel="icon" href="/images/logo3.png">
+</head>
+<body>
+
+<style>
+
+</style>
+
+<div class="navbar">
+    <a class="no-hover" th:if="${#session.getAttribute('loginEmail') != null}">안녕하세요, [[${#session.getAttribute('loginName')}]]님!</span></a>
+    <a href="/member/logout"  th:if="${#session == null or #session.getAttribute('loginEmail') != null}">로그아웃</a>
+    <a href="/member/mypage"> 마이페이지</a>
+</div>
+
+<div class="header" style="text-align: center;">
+    <a href="/recommendationsuccess"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+
+    <form action="/book/search" method="post" onsubmit="return validateSearch()" style="display: inline-block; text-align: center;">
+        <input type="text" name="bookTitle" id="bookTitle" placeholder="읽고 싶은 책을 검색해 보세요!" style="width: 500px; height: 40px; background-color: white; color: #006400; border-top: none; border-left:none; border-right:none; border-bottom: 5px solid #006400; padding: 5px; font-family: 'G마켓 산스 Bold'; font-weight: bold; text-align: center;">
+        <button type="submit" style="background-color: white; border: 3px solid #ffffff; width: 50px; height: 40px; color: #006400; font-weight: bold;">검색</button>
+    </form>
+</div>
+
+<div class="card">
+    <div class="book-card" th:each="book : ${bookList}">
+        <a th:href="@{/book/detail/{id}(id=${book.id})}">
+            <img th:src="${book.bookImage}" style="width: 150px; height:225px;">
+        </a>
+        <div class="book-details">
+            <h3 th:text="${book.bookName}"></h3>
+            <p th:text="${book.bookAuthor}"></p>
+            <p th:text="${book.bookPublisher}"></p>
+        </div>
+    </div>
+</div>
+
+<div class="footer" >
+    <h2>가이드북 </h2>
+    <p>52, Ewhayeodae-gil, Seodaemun-gu, Seoul, Republic of Korea</p>
+    <p>Contact : instagram @ewha_guidebook  e-mail guidebook@ewha.ac.kr</p>
+</div>
+
+</body>
+</html>

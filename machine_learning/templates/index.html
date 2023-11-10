@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Recommendations Test</title>
+</head>
+<body>
+
+<h1>Book Recommendations Test Page</h1>
+
+<div>
+  <h2>Similar Books</h2>
+  <button onclick="getSimilarBooks()">Get Similar Books</button>
+  <div id="similarBooksResult"></div>
+</div>
+
+<div>
+  <h2>Similar Major and Grade</h2>
+  <button onclick="getSimilarMajorAndGrade()">Get Similar Major and Grade</button>
+  <div id="similarMajorAndGradeResult"></div>
+</div>
+
+<div>
+  <h2>Similar Books by Member</h2>
+  <button onclick="getSimilarBooksByMember()">Get Similar Books by Member</button>
+  <div id="similarBooksByMemberResult"></div>
+</div>
+
+<script>
+function getSimilarBooks() {
+  var memberId = 90; // 예시로 사용하는 멤버 ID
+  fetch('/recommendations/similar_books/' + memberId)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('similarBooksResult').textContent = JSON.stringify(data, null, 2);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function getSimilarMajorAndGrade() {
+  var memberId = 90; // 예시로 사용하는 멤버 ID
+  fetch('/recommendations/similar_major_and_grade/' + memberId)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('similarMajorAndGradeResult').textContent = JSON.stringify(data, null, 2);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function getSimilarBooksByMember() {
+  var memberId = 90; // 예시로 사용하는 멤버 ID
+  fetch('/recommendations/similar_books_by_member/' + memberId)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('similarBooksByMemberResult').textContent = JSON.stringify(data, null, 2);
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+
+</body>
+</html>

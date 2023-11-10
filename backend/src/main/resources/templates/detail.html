@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/nav_foo.css">
+    <link rel="stylesheet" type="text/css" href="/css/detail.css">
+    <link rel="icon" href="/images/logo3.png">
+</head>
+
+<body>
+
+<style>
+</style>
+
+
+
+<div class="navbar">
+    <a class="no-hover" th:if="${#session.getAttribute('loginEmail') != null}">안녕하세요, [[${#session.getAttribute('loginName')}]]님!</span></a>
+    <a href="/member/logout"  th:if="${#session == null or #session.getAttribute('loginEmail') != null}">로그아웃</a>
+    <a href="/member/mypage"> 마이페이지</a>
+</div>
+
+<div class="header" style="text-align: center;">
+    <a href="/recommendationsuccess"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+    <form action="/book/search" method="post" onsubmit="return validateSearch()" style="display: inline-block; text-align: center;">
+        <input type="text" name="bookTitle" id="bookTitle" placeholder="읽고 싶은 책을 검색해 보세요!" style="width: 500px; height: 40px; background-color: white; color: #006400; border-top: none; border-left:none; border-right:none; border-bottom: 5px solid #006400; padding: 5px; font-family: 'G마켓 산스 Bold'; font-weight: bold; text-align: center;">
+        <button type="submit" style="background-color: white; border: 3px solid #ffffff; width: 50px; height: 40px; color: #006400; font-weight: bold;">검색</button>
+    </form>
+</div>
+
+
+<div class="card">
+    <div class="book-container">
+        <img th:src="${book.bookImage}" alt="book"/>
+        <div class="book-details">
+            <div class="line1" style="margin-bottom: 30px;">
+                <p><span class="book-title" th:text="${book.bookName}" style="font-size: 24px;"></span>
+            </div>
+            <div class="line1" style="margin-bottom: 10px;">
+                <p><span th:text="${'저자 : ' + book.bookAuthor}"></span>
+                    <span> | </span>
+                    <span th:text="${'출판사 : ' + book.bookPublisher}"></span></p>
+            </div>
+
+            <div class="line1" style="margin-bottom: 10px;">
+                <p th:unless="${book.bookDifficulty.equals('0')}">
+                    <span th:text="${'장르 : ' + book.bookGenres}">장르</span>
+                    <span> | </span>
+                    <span th:text="${'난이도 : ' + book.bookDifficulty}">난이도</span>
+                </p>
+                <p th:if="${book.bookDifficulty.equals('0')}">
+                    <span th:text="${'장르 : ' + book.bookGenres}">장르</span>
+                </p>
+            </div>
+
+            <div class="button-container">
+                <form action="/book/library" method="post" onsubmit="return handleFormSubmit('/book/library')" style="flex: 1;">
+                    <button type="submit" style="width: 100px;">내 서재에 추가</button>
+                </form>
+
+                <form action="/book/like" method="post" onsubmit="return handleFormSubmit('/book/like')" style="flex: 1;">
+                    <button type="submit" style="width: 60px;">찜하기</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script th:inline="javascript">
+    var memberDTO = [[${memberDTO}]];
+    var bookDTO = [[${book}]];
+    console.log("memberDTO value: ", memberDTO); // 로그 추가
+
+    function handleFormSubmit(url) {
+        if (memberDTO == null) {
+            alert("로그인이 필요합니다.");
+            window.location.href = '/member/login';
+            return false; // 폼 제출 방지
+        } else {
+            checkIfBookExists(url);
+        }
+    }
+
+    function showPopup() {
+        alert("책이 추가되었습니다.");
+    }
+
+    function checkIfBookExists(url) {
+        var memberId = memberDTO.id; // memberDTO의 id를 가져옵니다.
+        var bookId = bookDTO.id;
+
+        fetch(`/book/check?memberId=${memberId}&bookId=${bookId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    alert("이미 같은 책이 있습니다.");
+                } else {
+                    showPopup();
+                    window.location.href = url; // URL로 리다이렉션
+                }
+            })
+
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        return false; // 폼 제출 방지
+
+    }
+</script>
+</div>
+
+<div class="footer">
+    <h2>가이드북 </h2>
+    <p>52, Ewhayeodae-gil, Seodaemun-gu, Seoul, Republic of Korea</p>
+    <p>Contact : instagram @ewha_guidebook</p>
+</div>
+</body>
+</html>

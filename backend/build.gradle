@@ -1,0 +1,65 @@
+plugins {
+	id 'java'
+	id 'war'
+	id 'org.springframework.boot' version '2.7.15'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'GuideBook'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '1.8'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	all*.exclude group: 'org.slf4j', module: 'slf4j-simple'
+}
+
+bootWar{
+	archiveBaseName ='-'
+	archiveFileName ='-.war'
+	archiveVersion ="0.0.0"
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
+	implementation 'org.springframework.boot:spring-boot-starter-logging'
+
+
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	providedCompile 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	runtimeOnly 'mysql:mysql-connector-java:8.0.32'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.h2database:h2'
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
+
+	implementation 'org.slf4j:slf4j-api:1.7.32' // 최신 버전으로 변경 가능
+	implementation 'org.slf4j:slf4j-simple:1.7.32' // 최신 버전으로 변경 가능
+
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

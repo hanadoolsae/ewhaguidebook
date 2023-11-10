@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="icon" href="/images/logo3.png">
+    <meta charset="UTF-8">
+    <title>회원정보 수정</title>
+    <style>
+        /* 모달 다이얼로그 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        /* 닫기 버튼 스타일 */
+        .close-button {
+            float: right;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="banner">
+    <a href="/home">Home</a>
+</div>
+
+<h2>회원정보 수정</h2>
+
+<div class="update">
+<form action="/member/update" method="post">
+    <input type="hidden" th:value="${updateMember.id}" name="id"><br>
+    <input type="hidden" th:value="${updateMember.memberScore}" name="memberScore"><br>
+    <input type="hidden" th:value="${updateMember.memberLevel}" name="memberLevel"><br>
+    <input type="hidden" th:value="${updateMember.memberMajor}" name="memberMajor"><br>
+    <input type="hidden" th:value="${updateMember.memberCharacter}" name="memberCharacter"><br>
+    이메일: <input type="text" th:value="${updateMember.memberEmail}" name="memberEmail" readonly> <br>
+    비밀번호: <input type="text" th:value="${updateMember.memberPassword}" name="memberPassword"> <br>
+    이름: <input type="text" th:value="${updateMember.memberName}" name="memberName"> <br>
+
+    <!-- 선호 장르 설정 버튼 -->
+    선호 장르 설정:  <button onclick="openGenrePopup()">변경</button> <br>
+
+    <!-- 선택한 장르 표시 -->
+    선호 장르: <span id="selectedGenresDisplay"></span> <br>
+
+    생년월일: <input type="date" th:value="${updateMember.memberBirth}" name="memberBirth"> <br>
+    학년: <select name="memberGrade">
+    <option th:selected="${updateMember.memberGrade == '초등학생'}" value="초등학생">초등학생</option>
+    <option th:selected="${updateMember.memberGrade == '중1'}" value="중1">중1</option>
+    <option th:selected="${updateMember.memberGrade == '중2'}" value="중2">중2</option>
+    <option th:selected="${updateMember.memberGrade == '중3'}" value="중3">중3</option>
+    <option th:selected="${updateMember.memberGrade == '고1'}" value="고1">고1</option>
+    <option th:selected="${updateMember.memberGrade == '고2'}" value="고2">고2</option>
+    <option th:selected="${updateMember.memberGrade == '고3'}" value="고3">고3</option>
+    <option th:selected="${updateMember.memberGrade == '성인'}" value="성인">성인</option>
+    </select> <br>
+
+    <!-- 양식 제출 버튼 -->
+    <input type="submit" value="정보수정">
+</form>
+</div>
+
+<!-- JavaScript 코드 -->
+<!-- JavaScript 코드 -->
+<script>
+    function openGenrePopup() {
+        const popup = window.open("", "popup", "width=600,height=400");
+        popup.document.write(`
+            <html>
+                <head>
+                    <title>선호 장르 변경</title>
+                </head>
+                <body>
+                    <h3>변경할 선호 장르를 선택해주세요.</h3>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="selectedGenres" value=1> 가정/육아</label>
+                        <label><input type="checkbox" name="selectedGenres" value=2> 건강</label>
+                        <label><input type="checkbox" name="selectedGenres" value=3> 경제/경영</label>
+                        <label><input type="checkbox" name="selectedGenres" value=4> 과학</label>
+                        <label><input type="checkbox" name="selectedGenres" value=5> 기술/공학</label>
+                        <label><input type="checkbox" name="selectedGenres" value=6> 만화</label>
+                        <label><input type="checkbox" name="selectedGenres" value=7> 시/에세이</label>
+                        <label><input type="checkbox" name="selectedGenres" value=8> 여행</label>
+                        <label><input type="checkbox" name="selectedGenres" value=9> 역사/문화</label>
+                        <label><input type="checkbox" name="selectedGenres" value=10> 예술/대중문화</label>
+                        <label><input type="checkbox" name="selectedGenres" value=11> 요리</label>
+                        <label><input type="checkbox" name="selectedGenres" value=12> 인문</label>
+                        <label><input type="checkbox" name="selectedGenres" value=13> 자기계발</label>
+                        <label><input type="checkbox" name="selectedGenres" value=14> 정치/사회</label>
+                        <label><input type="checkbox" name="selectedGenres" value=15> 종교</label>
+                        <label><input type="checkbox" name="selectedGenres" value=16> 취미/실용/스포츠</label>
+                        <label><input type="checkbox" name="selectedGenres" value=17> 컴퓨터/IT</label>
+                        <label><input type="checkbox" name="selectedGenres" value=18> 소설</label>
+                    </div>
+                    <br>
+                    <button id="updateGenreButton">완료</button>
+                </body>
+            </html>
+        `);
+
+        const updateGenreButton = popup.document.getElementById("updateGenreButton");
+        updateGenreButton.addEventListener("click", () => {
+            // 선택된 장르 가져오기
+            const selectedGenres = Array.from(popup.document.querySelectorAll('input[name="selectedGenres"]:checked'))
+                .map(checkbox => checkbox.value);
+
+            // 부모 창에 선택된 장르 표시
+            window.opener.document.getElementById("selectedGenresDisplay").innerText = selectedGenres.join(", ");
+
+            // 팝업 창 닫기
+            popup.close();
+        });
+
+    }
+</script>
+
+
+</body>
+</html>

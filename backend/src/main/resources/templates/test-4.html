@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/nav_foo.css">
+    <link rel="icon" href="/images/logo3.png">
+  <style>
+    body {
+      text-align: center;
+      font-family: 'G마켓 산스 Medium';
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-top: 30px;
+    }
+
+    .quiz {
+      font-size: 18px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .choices {
+      list-style-type: none;
+      padding: 0;
+    }
+
+ .choice {
+            display: grid;
+            margin: 10px auto;
+            grid-template-columns: repeat(2, 200px); /* 5개의 열로 구성 */
+      grid-row-gap: 10px; /* 그리드 간격 설정 */
+            padding: 50px;
+            cursor: pointer;
+        }
+
+    .choice.selected {
+      background-color: rgb(129, 226, 171); /* 선택한 보기의 배경색 변경 */
+    }
+
+    .underline {
+      text-decoration: underline; /* 밑줄 추가 */
+    }
+    button {
+      background-color: #006400;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      margin-bottom: 40px;
+      cursor: pointer; 
+    }
+  </style>
+</head>
+<body>
+  <div class="header" style="text-align: center;">
+    <a href="/"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+  </div>
+
+<div class="quiz" style="font-weight: bold;">4. 형태가 같지만 뜻이 다른 말을 동형어라고 한다.<br>다음 글의 밑줄 친 동형어 ‘감상’과 문맥적 의미가 가장 비슷하게 쓰인 것을 고르세요.</div>
+<div class="quiz" style="border: 2px solid #006400; padding: 10px; width: 90%; margin: 0 auto; font-size: 16px; line-height: 1.5;">수원 화성은 우리나라의 대표적인 성곽 도시로 서양의 앞선 건축 기법과 동양 건축의 아름다움을 동시에 엿볼 수 있어요.
+    <br>
+    볼거리가 많은 만큼 건물 하나만을 보는 것 보다 주변 경치와 함께 <span class="underline">감상</span>하는 것이 훨씬 더 좋아요.</div>
+<ul class="choices" style="list-style-type: none; padding: 0; text-align: center;">
+    <li class="choice" data-number="1" onclick="selectChoice(1)" style="display: block; margin: 10px; padding: 10px; cursor: pointer;">① 희준이는 <span class="underline">감상</span>에 젖어 눈물을 흘렸다.</li>
+    <li class="choice" data-number="2" onclick="selectChoice(2)" style="display: block; margin: 10px; padding: 10px; cursor: pointer;">② 이런저런 생각 끝에 벅찬 <span class="underline">감상</span>이 솟아올랐다.</li>
+    <li class="choice" data-number="3" onclick="selectChoice(3)" style="display: block; margin: 10px; padding: 10px; cursor: pointer;">③ 책을 읽은 <span class="underline">감상</span>을 한마디로만 표현할 수 없다.</li>
+    <li class="choice" data-number="4" onclick="selectChoice(4)" style="display: block; margin: 10px; padding: 10px; cursor: pointer;">④ 소리는 틈나는 대로 영화 <span class="underline">감상</span>의 시간을 가지곤 한다.</li>
+</ul>
+
+
+<button onclick="nextQuestion()">다음</button>
+
+<div class="footer" >
+  <h2 style="color: black">가이드북 </h2>
+<p>52, Ewhayeodae-gil, Seodaemun-gu, Seoul, Republic of Korea</p>
+<p>Contact : instagram @ewha_guidebook  e-mail guidebook@ewha.ac.kr</p>
+</div>
+
+
+<script>
+    let memberAnswer = 0; // 사용자가 선택한 보기의 초기값
+    const quizId = 4; // 예시: 퀴즈 ID
+
+    // 사용자가 선택한 보기를 설정하는 함수
+    function selectChoice(choiceNumber) {
+        memberAnswer = choiceNumber;
+        // 선택한 보기에 스타일 적용
+        const choices = document.querySelectorAll('.choice');
+        choices.forEach(choice => {
+            choice.classList.remove('selected');
+        });
+        document.querySelector(`.choice[data-number="${choiceNumber}"]`).classList.add('selected');
+    }
+
+    // 다음 퀴즈 페이지로 이동하는 함수
+    function nextQuestion() {
+        // 보기를 선택하지 않은 경우 안내창 표시
+        if (memberAnswer === 0) {
+            alert('정답을 선택해주세요.');
+            return;
+        }
+        // 선택한 보기와 퀴즈 ID를 서버로 전송
+        saveAnswerToServer(memberAnswer, quizId);
+        // 다음 퀴즈 페이지로 이동
+        const currentPageNumber = parseInt(window.location.pathname.split('/').pop());
+        const nextPageNumber = currentPageNumber + 1;
+        window.location.href = `/test/${nextPageNumber}`;
+    }
+
+    // 클라이언트에서 서버로 데이터를 보내는 함수
+    function saveAnswerToServer(memberAnswer, quizId) {
+        const data = {
+            memberAnswer: memberAnswer,
+            quizId: quizId,
+        };
+
+        fetch('/save-answer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if(data.isCorrect) {
+                    console.log('정답입니다.');
+                } else {
+                    console.log('오답입니다.');
+                }
+            })
+            .catch(error => {
+                console.error('오류 발생:', error);
+            });
+    }
+
+</script>
+
+</body>
+</html>

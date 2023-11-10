@@ -1,0 +1,37 @@
+
+*{
+  font-family: 'Gmarket sans medium';
+}.navbar {
+    background-color: white;
+    overflow: hidden; /* 내용 넘치지 않도록 설정 */
+  }
+
+  .navbar a {
+    float: right;
+    display: block;
+    color: #006400; /* 글자색 */
+    text-align: center;
+    padding: 14px 16px; /* 위아래, 좌우 패딩 */
+    text-decoration: none; /* 링크의 밑줄 제거 */
+  }
+
+  .navbar a.no-hover:hover {
+    /* 해당 클래스를 가진 <a> 요소의 hover 스타일을 무효화 */
+    background-color: inherit;
+    color: #006400;
+    /* 다른 스타일 속성도 무효화할 수 있습니다. */
+  }
+
+  .navbar a:hover {
+    background-color: #006400; /* 마우스 호버시 배경색 변경 */
+    color: white; /* 마우스 호버시 글자색 변경 */
+  }
+
+  .footer {
+    padding: 20px;
+    text-align: center;
+    background: #ffffff;
+    margin-top: 20px;
+    clear: both;
+    border: 20px solid #006400;
+  }

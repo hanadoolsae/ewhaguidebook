@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="/css/nav_foo.css">
+  <link rel="icon" href="/images/logo3.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>어휘력/문해력 테스트</title>
+  <style>
+    body {
+      font-family: 'G마켓 산스 Medium';
+      text-align: center;
+    }
+    h1 {
+      font-size: 32px;
+      margin-top: 20px;
+    }
+    .instructions {
+      font-size: 18px;
+      margin-top: 0px;
+      text-align: center;
+      font-family: 'G마켓 산스 Medium';
+    }
+    #start-button, #pass-button {
+      background-color: #006400;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 30px;
+      margin-bottom: 40px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="header" style="text-align: center;">
+  <a href="/"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+</div>
+
+<h1>어휘력/문해력 테스트</h1>
+<div class="instructions">
+  <pre style="font-family: 'G마켓 산스 Medium';">주의 사항
+
+1. 총 10문제로 구성되어 있으며 8분정도 소요 예정
+2. 테스트 결과를 바탕으로 레벨을 측정하기에 인터넷 검색 금지
+</pre>
+</div>
+<button id="start-button">시작하기</button>
+<button id="pass-button">건너뛰기</button>
+
+<div class="footer" >
+  <h2 style="color: black">가이드북 </h2>
+  <p>52, Ewhayeodae-gil, Seodaemun-gu, Seoul, Republic of Korea</p>
+  <p>Contact : instagram @ewha_guidebook  e-mail guidebook@ewha.ac.kr</p>
+</div>
+
+<script>
+  // '시작하기' 버튼을 클릭하면 test/1 페이지로 이동
+  document.getElementById('start-button').addEventListener('click', function() {
+    window.location.href = '/test/1'; // 절대 경로로 수정 ("/"로 시작)
+  });
+
+  // '건너뛰기' 버튼을 클릭하면 test/1 페이지로 이동
+  document.getElementById('pass-button').addEventListener('click', function() {
+    window.location.href = '/test/pass'; // 절대 경로로 수정 ("/"로 시작)
+  });
+
+</script>
+</body>
+</html>

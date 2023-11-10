@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="/css/nav_foo.css">
+  <link rel="stylesheet" type="text/css" href="/css/style_mp.css">  
+  <link rel="icon" href="/images/logo3.png">
+  <title>Mypage</title>
+</head>
+
+<style> 
+
+
+</style>
+
+<body>
+
+<body>
+
+<div class="navbar">
+  <a class="no-hover" th:if="${#session.getAttribute('loginEmail') != null}">안녕하세요, [[${#session.getAttribute('loginName')}]]님!</span></a>
+  <a href="/member/logout"  th:if="${#session == null or #session.getAttribute('loginEmail') != null}">로그아웃</a>
+  <a href="/member/mypage"> 마이페이지</a>
+</div>
+
+<div class="header" style="text-align: center;">
+  <a href="/recommendationsuccess"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+
+  <form action="/book/search" method="post" onsubmit="return validateSearch()" style="display: inline-block; text-align: center;">
+    <input type="text" name="bookTitle" id="bookTitle" placeholder="읽고 싶은 책을 검색해 보세요!" style="width: 500px; height: 40px; background-color: white; color: #006400; border-top: none; border-left:none; border-right:none; border-bottom: 5px solid #006400; padding: 5px; font-family: 'G마켓 산스 Bold'; font-weight: bold; text-align: center;">
+    <button type="submit" style="background-color: white; border: 3px solid #ffffff; width: 50px; height: 40px; color: #006400; font-weight: bold;">검색</button>
+  </form>
+</div>
+
+<div class="container">
+  <div class="profile-section">
+    <h2>마이페이지</h2>
+    <div class="profile-header">
+      <!-- 프로필 사진 -->
+      <div class="profile-pic">
+        <img th:src="@{'/images/character_' + ${member.memberCharacter} + '.png'}" alt="프로필 사진" style="width: 200px; height: 250px;">
+        <div class="button-group" style="margin-left: 20px;">
+          <a href="/member/update" class="btn">회원정보수정</a>
+        </div>
+      </div>
+      <!-- 이름, 학년, 선택학과, 선택장르, 레벨, level.png, 재시험 버튼 -->
+      <div class="profile-info" style="display: flex;">
+        <h3 style="margin-right: 50px;" th:text="${member.memberName}"></h3>
+        <p><span th:text="${member.memberGrade}"></span> / <span th:text="${member.memberMajor}"></span> </p>
+      </div>
+
+      <div class="profile-info" style="display: flex; flex-direction: column; align-items: flex-start; margin-left: 300px;">
+        <p><img th:src="@{'/images/level' + ${member.memberLevel} + '.png'}" alt="레벨" style="width: 150px; height: 150px;"></p>
+
+        <a href="/test/restart" class="btn" style="margin-top: 10px; margin-left: 30px;">재시험</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="library-section">
+    <h2>내 서재</h2>
+    <div class="book-list" style="display: flex; flex-wrap: wrap;">
+     <div th:each="book : ${mybookList}">
+      <div class="book-container" >
+        <input type="hidden" th:value="${book.id}" class="library-bookId">
+        <a style="display: flex;">
+          <div class="image-container" style="position: relative;">
+            <img th:src="${book.bookImage}"  style="width:150px; height:250px; margin-top: -10px; margin-left: 50px;">            
+            <div class="book-overlay"></div>
+            <div class="book-details" style="position: absolute; top: 50%; left: 62%; transform: translate(-50%, -50%); text-align: center;">
+              <button onclick="openPopup(this.closest('.book-container').querySelector('.library-bookId').value)" class="hidden">책 상세정보</button>
+              <button onclick="openInProgressPopup(this.closest('.book-container').querySelector('.library-bookId').value)" class="hidden">독서중</button>
+              <button onclick="openCompletedPopup(this.closest('.book-container').querySelector('.library-bookId').value)" class="hidden">완독</button>
+              <button onclick="openPausedPopup(this.closest('.book-container').querySelector('.library-bookId').value)" class="hidden">중단</button>
+              <button onclick="openMemoPopup(this.closest('.book-container').querySelector('.library-bookId').value)" class="hidden">메모</button>
+              <button onclick="openDeletePopup(this.closest('.book-container').querySelector('.library-bookId').value)" class="hidden">삭제</button>
+            </div>
+            <div class="progress" style="position: absolute; bottom: 0; left: 0; right: 0;">
+              <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" 
+              th:id="'progress-' + ${book.id}"></div>
+              <p th:id="'progressText-' + ${book.id}" class="book-progress"></p>
+            </div>
+          </div>   
+          <img src="/images/badge.png" style="position: absolute; top: 0; left: 30px; width: 50px; height: 50px; display: none;" th:id="'badge-' + ${book.id}">
+      </a>
+      </div>     
+        </div>
+
+
+    
+
+    </div>
+   
+
+    
+  </div>
+
+
+
+
+  <div class="like-section">
+    <h2>찜한 도서</h2>
+    <div class="book-list" style="display: flex; flex-wrap: wrap;">
+        <div th:each="book : ${mylikeList}">
+     <div class="book-container">
+        <input type="hidden" th:value="${book.id}" class="like-bookId">
+        <a>
+          <div class="image-container" style="position: relative;">
+            <img th:src="${book.bookImage}"  style="width:150px; height:250px; margin-top: -10px; margin-left: 50px;">
+            <div class="book-overlay"></div>
+            <div class="book-details">
+              <button onclick="openPopup(this.closest('.book-container').querySelector('.like-bookId').value)" class="hidden">책 상세정보</button>
+              <button onclick="openLibraryPopup(this.closest('.book-container').querySelector('.like-bookId').value)" class="hidden">내 서재에 추가</button>
+            </div>
+          </div>
+      </a>
+      </div>
+    </div>
+    </div>
+
+  </div>
+
+</div> <!-- book container end -->
+
+<div class="footer">
+  <h2>가이드북 </h2>
+  <p>52, Ewhayeodae-gil, Seodaemun-gu, Seoul, Republic of Korea</p>
+  <p>Contact : instagram @ewha_guidebook</p>
+</div>
+
+
+<script>
+  
+  function openPopup(bookId) {
+    fetch("/book/mybook/" + bookId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+            .then(response => response.json())
+            .then(data => {
+              const popup = window.open("", "popup", "width=600,height=400");
+              popup.document.write(`
+        <html>
+          <head>
+            <title>책 정보 상세보기</title>
+            <style>
+              *{
+                        text-align: center;
+                }
+              h3 {
+                        font-size: 20px;
+                        font-weight: bold;
+                        color: #006400;
+                 }
+              p {
+                        font-size: 16px;
+                        color: #333;
+                 }
+              button {
+                        display: inline-block;
+                        background-color: #006400;
+                        color: white;
+                        padding: 10px;
+                        border: none;
+                        margin-top: 10px;
+                     }
+            </style>
+          </head>
+
+          <body>
+            <h3>${data.bookName}</h3>
+            <p>Author: ${data.bookAuthor}</p>
+            <p>Publisher: ${data.bookPublisher}</p>
+            <p>Genre: ${data.bookGenre}</p>
+            <p>Difficulty: ${data.bookDifficulty}</p>
+            <p>Introduce: ${data.bookIntroduce}</p>
+            <img src="${data.bookImage}" style="width:200px; height:300px;">
+            </form>
+            <button onclick="window.close()">닫기</button>
+          </body>
+        </html>
+      `);
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function openCompletedPopup(bookId) {
+    fetch("/book/status/" + bookId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+            .then(response => response.json())
+            .then(data => {
+              const popup = window.open("", "popup", "width=600,height=400");
+              popup.document.write(`
+        <html>
+          <head>
+            <title>독서 상태 현황 - 완독</title>
+            <style>
+              *{
+                        text-align: center;
+              }
+              h3{
+                        font-size: 20px;
+                        font-weight: bold;
+                        color: #006400;
+              }
+              button {
+                        display: inline-block;
+                        background-color: #006400;
+                        color: white;
+                        padding: 10px;
+                        border: none;
+                        margin-right: 20px;
+              }
+            </style>
+          </head>
+
+          <body>
+            <h3>완독하셨습니까?</h3>
+            <button id="completeButton">예</button>
+            <button onclick="window.close()">아니오</button>
+          </body>
+        </html>
+      `);
+
+              const completeButton = popup.document.getElementById("completeButton");
+              completeButton.addEventListener("click", () => {
+                sendCompletionStatus(true, bookId);
+                popup.close(); // 팝업 닫기
+                window.location.href = '/member/mypage';
+              });
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function sendCompletionStatus(status, bookId) {
+    const data = { status: status, bookId: bookId };
+
+    fetch("/book/complete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log("서버 응답:", data);
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+
+
+  function openPausedPopup(bookId) {
+    fetch("/book/status/" + bookId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+            .then(response => response.json())
+            .then(data => {
+              const popup = window.open("", "popup", "width=600,height=400");
+              popup.document.write(`
+        <html>
+          <head>
+            <title>독서 상태 현황 - 중단</title>
+            <style>
+              *{
+                text-align: center;
+              }
+              h3{
+                font-size: 20px;
+                font-weight: bold;
+                color: #006400;
+              }
+              button {
+                display: inline-block;
+                background-color: #006400;
+                color: white;
+                padding: 10px;
+                border: none;
+                margin-top: 20px;
+                margin-right: 20px;
+              }
+            </style>
+          </head>
+
+          <body>
+            <h3>독서를 중단하셨습니까? 중단 사유를 선택해주세요.</h3>
+            <select id="reasonInput" name="reasonInput">
+                <option value="1">도서 난이도가 높음</option>
+                <option value="2">도서 난이도가 낮음</option>
+                <option value="3">도서 두께가 두꺼움</option>
+                <option value="4">도서 두께가 얇음</option>
+                <option value="5">장르가 맞지 않음</option>
+            </select>
+            <button id="pauseButton">확인</button>
+            <button onclick="window.close()">아니오</button>
+          </body>
+        </html>
+      `);
+              const pauseButton = popup.document.getElementById("pauseButton");
+              pauseButton.addEventListener("click", () => {
+                const reason = popup.document.getElementById("reasonInput").value;
+                sendPauseStatus(true, bookId, reason);
+                popup.close();
+                window.location.href = '/member/mypage';
+              });
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function sendPauseStatus(status, bookId, reason) {
+    const data = { status: status, bookId: bookId, reason: reason};
+
+    fetch("/book/pause", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log("서버 응답:", data);
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function openInProgressPopup(bookId) {
+    fetch("/book/status/" + bookId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+            .then(response => response.json())
+            .then(data => {
+              const popup = window.open("", "popup", "width=600,height=400");
+              popup.document.write(`
+        <html>
+          <head>
+            <title>독서 상태 현황 - 독서 중</title>
+            <style>
+             *{
+                text-align: center;
+             }
+             h3{
+                font-size: 20px;
+                font-weight: bold;
+                color: #006400;
+             }
+             button {
+                display: inline-block;
+                background-color: #006400;
+                color: white;
+                padding: 10px;
+                border: none;
+                margin-top: 20px;
+                margin-right: 20px;
+             }
+            </style>
+          </head>
+
+          <body>
+            <h3>독서를 더 하셨으면, 진행 상황을 입력해주세요.</h3>
+            <input type="number" id="progressInput" placeholder="독서를 마친 페이지" />p
+            <button id="inprogressButton">확인</button>
+            <button onclick="window.close()">아니오</button>
+          </body>
+        </html>
+      `);
+              const inprogressButton = popup.document.getElementById("inprogressButton");
+              inprogressButton.addEventListener("click", () => {
+                const progress = popup.document.getElementById("progressInput").value;
+                sendProgressStatus(true, bookId, progress);
+                popup.close();
+                window.location.href = '/member/mypage';
+              });
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function sendProgressStatus(status, bookId, progress) {
+    const data = { status: status, bookId: bookId, progress: progress};
+
+    fetch("/book/progress", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log("서버 응답:", data);
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function openDeletePopup(bookId) {
+    fetch("/book/delete/" + bookId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+            .then(response => response.json())
+            .then(data => {
+              const popup = window.open("", "popup", "width=600,height=400");
+              popup.document.write(`
+        <html>
+          <head>
+            <title>도서 삭제</title>
+            <style>
+             *{
+                text-align: center;
+             }
+             h3{
+                font-size: 20px;
+                font-weight: bold;
+                color: #006400;
+             }
+             button {
+                display: inline-block;
+                background-color: #006400;
+                color: white;
+                padding: 10px;
+                border: none;
+                margin-top: 20px;
+                margin-right: 20px;
+             }
+            </style>
+          </head>
+
+          <body>
+            <h3>도서를 삭제하시겠습니까?</h3>
+            <button id="deleteButton">예</button>
+            <button onclick="window.close()">아니오</button>
+          </body>
+        </html>
+      `);
+
+              const deleteButton = popup.document.getElementById("deleteButton");
+              deleteButton.addEventListener("click", () => {
+                sendDeletionStatus(true, bookId)
+                popup.close();
+                window.location.href = '/member/mypage';
+              });
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function sendDeletionStatus(status, bookId) {
+    const data = { status: status, bookId: bookId };
+
+    fetch("/book/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log("서버 응답:", data);
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function openLibraryPopup(bookId) {
+    fetch("/book/mylike/" + bookId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+            .then(response => response.json())
+            .then(data => {
+              const popup = window.open("", "popup", "width=600,height=400");
+              popup.document.write(`
+        <html>
+          <head>
+            <title>내 서재에 추가</title>
+            <style>
+             *{
+                text-align: center;
+             }
+             h3{
+                font-size: 20px;
+                font-weight: bold;
+                color: #006400;
+             }
+             button {
+                display: inline-block;
+                background-color: #006400;
+                color: white;
+                padding: 10px;
+                border: none;
+                margin-top: 20px;
+                margin-right: 20px;
+             }
+            </style>
+          </head>
+
+          <body>
+            <h3>찜해둔 도서를 내 서재에 추가하시겠습니까?</h3>
+            <button id="tolibraryButton">확인</button>
+            <button onclick="window.close()">아니오</button>
+          </body>
+        </html>
+      `);
+              const tolibraryButton = popup.document.getElementById("tolibraryButton");
+              tolibraryButton.addEventListener("click", () => {
+                sendLikeToLibrary(true, bookId);
+                popup.close();
+                window.location.href = '/member/mypage';
+              });
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function sendLikeToLibrary(status, bookId) {
+    const data = { status: status, bookId: bookId };
+
+    fetch("/book/mylike", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log("서버 응답:", data);
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function displayBookStatus(bookId) {
+    var statusElement = document.getElementById('status-' + bookId);
+    var badgeElement = document.getElementById('badge-' + bookId);
+    var progressBar = document.getElementById('progress-' + bookId);
+    var progressText = document.getElementById('progressText-' + bookId);
+
+    // 서버로부터 상태 가져오기
+    fetch("/book/mystatus/" + bookId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log("서버 응답:", data);
+              // 독서 현황 입력 X
+              if (data.status === 0) {
+                statusElement.innerText = "독서 현황을 입력해주세요.";
+                progressBar.style.width = 0 + "%"; // 프로그레스 바의 너비를 업데이트
+                progressBar.setAttribute('aria-valuenow', 0); // aria-valuenow 속성을 업데이트하여 접근성을 개선합니다.
+                progressText.innerText = "0%";
+              }
+              // 완독
+              else if (data.status === 1) {
+                progressBar.style.width = 100 + "%"; // 프로그레스 바의 너비를 업데이트
+                progressBar.setAttribute('aria-valuenow', 100); // aria-valuenow 속성을 업데이트하여 접근성을 개선합니다.
+                progressText.innerText = data.statusDetail + "%";
+
+                badgeElement.style.display = 'block';
+              }
+              // 중단
+              else if (data.status === 2) {
+                statusElement.innerText = "중단 사유 : " + data.statusDetail;
+                progressBar.style.width = 0 + "%"; // 프로그레스 바의 너비를 업데이트
+                progressBar.setAttribute('aria-valuenow', 0); // aria-valuenow 속성을 업데이트하여 접근성을 개선합니다.
+                progressText.innerText = "독서 중단";
+              }
+              // 독서 중
+              else if (data.status === 3) {
+                var progressValue = parseInt(data.statusDetail);
+                console.log(progressValue);
+                progressBar.style.width = progressValue + "%"; // 프로그레스 바의 너비를 업데이트
+                progressBar.setAttribute('aria-valuenow', progressValue); // aria-valuenow 속성을 업데이트하여 접근성을 개선합니다.
+                progressText.innerText = progressValue + '%';
+              }
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const bookIds = document.querySelectorAll(".library-bookId");
+    bookIds.forEach((bookIdInput) => {
+      displayBookStatus(bookIdInput.value);
+    });
+  });
+
+  function openMemoPopup(bookId) {
+    fetch("/book/memo/" + bookId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+            .then(response => response.json())
+            .then(data => {
+              const popup = window.open("", "popup", "width=600,height=400");
+              let existingMemo = data.memo || ""; // 기존 메모가 없으면 빈 문자열로 초기화
+
+              popup.document.write(`
+        <html>
+          <head>
+            <title>도서 메모하기</title>
+          </head>
+          <style>
+            button{
+              background-color: #006400;
+                color: white;
+                padding: 10px;
+                border: none;
+                margin-top: 20px;
+            }
+
+            </style>
+
+          <body>
+            <h3>이 책에 대한 당신의 생각을 메모하세요.</h3>
+            <textarea id="memo" style="width: 100%; height: 200px;">${existingMemo}</textarea>
+            <button id="saveButton">저장</button>
+            <button onclick="window.close()">아니오</button>
+          </body>
+        </html>
+      `);
+              const saveButton = popup.document.getElementById("saveButton");
+              saveButton.addEventListener("click", () => {
+                const memo = popup.document.getElementById("memo").value;
+                sendMemo(true, bookId, memo);
+                popup.close();
+                window.location.href = '/member/mypage';
+              });
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+  function sendMemo(status, bookId, memo) {
+    const data = { status: status, bookId: bookId, memo: memo};
+
+    fetch("/book/memo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+            .then(response => response.json())
+            .then(data => {
+              console.log("서버 응답:", data);
+            })
+            .catch(error => console.error("Error:", error));
+  }
+
+</script>
+
+
+
+
+</body>
+</html>

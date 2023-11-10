@@ -1,0 +1,144 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="/css/nav_foo.css">
+  <link rel="icon" href="/images/logo3.png">
+  <style>
+    body {
+      text-align: center;
+      font-family: 'G마켓 산스 Medium';
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-top: 30px;
+    }
+
+    .quiz {
+      font-size: 18px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .choices {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .choice {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 800px;
+      cursor: pointer;
+    }
+
+    .choice.selected {
+      background-color: rgb(129, 226, 171); /* 선택한 보기의 배경색 변경 */
+    }
+
+    .underline {
+      text-decoration: underline; /* 밑줄 추가 */
+    }
+    button {
+      background-color: #006400;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      margin-bottom: 40px;
+      cursor: pointer; 
+    }
+  </style>
+</head>
+<body>
+  <div class="header" style="text-align: center;">
+    <a href="/"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+  </div>
+  
+<div class="quiz" style="font-weight: bold;">9. 다음 기사 내용과 관련된 사례로 보기 어려운 것을 고르세요.</div>
+<div class="quiz" style="border: 2px solid #006400; padding: 10px; width: 80%; margin: 0 auto; font-size: 16px; line-height: 1.5;">
+  클래식 공연 티켓이 영화표보다 싸네!
+  <br>
+  <br>
+  클래식 공연은 고가의 비용을 지불한 뒤 멋진 옷을 빼입고 봐야 할 것 같은 선입견이 있다.
+  <br>
+  하지만 최근에는 영화표보다도 싼 값으로 즐길 수 있는 공연이 제법 눈에 띈다.
+</div>
+
+<ul class="choices">
+  <li class="choice" data-number="1" onclick="selectChoice(1)">① S시향은 정기적으로 '퇴근길 클래식 콘서트'를 무료로 진행하여 공연에 대한 진입 장벽을 낮추고 있다.</li>
+  <li class="choice" data-number="2" onclick="selectChoice(2)">② K예술센터는 '클래식 라운지'라는 이름으로 전 좌석 1만원의 공연을 제공한다.</li>
+  <li class="choice" data-number="3" onclick="selectChoice(3)">③ B필하모닉은 급변하는 세계 속에서 오케스트라로 우뚝 서겠다는 방향성을 설명하고, <br>피아니스트 조성진과의 협연 무대를 독일과 홍콩에서 선보인다.</li>
+  <li class="choice" data-number="4" onclick="selectChoice(4)">④ H문화회관은 1000원으로 클래식을 접목한 퓨전 음악 프로그램을 진행하고 있다.</li>
+</ul>
+<button onclick="nextQuestion()">다음</button>
+
+<div class="footer" >
+  <h2 style="color: black">가이드북 </h2>
+<p>52, Ewhayeodae-gil, Seodaemun-gu, Seoul, Republic of Korea</p>
+<p>Contact : instagram @ewha_guidebook  e-mail guidebook@ewha.ac.kr</p>
+</div>
+
+<script>
+  let memberAnswer = 0; // 사용자가 선택한 보기의 초기값
+  const quizId = 19; // 예시: 퀴즈 ID
+
+  // 사용자가 선택한 보기를 설정하는 함수
+  function selectChoice(choiceNumber) {
+    memberAnswer = choiceNumber;
+    // 선택한 보기에 스타일 적용
+    const choices = document.querySelectorAll('.choice');
+    choices.forEach(choice => {
+      choice.classList.remove('selected');
+    });
+    document.querySelector(`.choice[data-number="${choiceNumber}"]`).classList.add('selected');
+  }
+
+  // 다음 퀴즈 페이지로 이동하는 함수
+  function nextQuestion() {
+    // 보기를 선택하지 않은 경우 안내창 표시
+    if (memberAnswer === 0) {
+      alert('정답을 선택해주세요.');
+      return;
+    }
+    // 선택한 보기와 퀴즈 ID를 서버로 전송
+    saveAnswerToServer(memberAnswer, quizId);
+    // 다음 퀴즈 페이지로 이동
+    const currentPageNumber = parseInt(window.location.pathname.split('/').pop());
+    const nextPageNumber = currentPageNumber + 1;
+    window.location.href = `/test/${nextPageNumber}`;
+  }
+
+  // 클라이언트에서 서버로 데이터를 보내는 함수
+  function saveAnswerToServer(memberAnswer, quizId) {
+    const data = {
+      memberAnswer: memberAnswer,
+      quizId: quizId,
+    };
+
+    fetch('/resave-answer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+            .then(response => response.json())
+            .then(data => {
+              if(data.isCorrect) {
+                console.log('정답입니다.');
+              } else {
+                console.log('오답입니다.');
+              }
+            })
+            .catch(error => {
+              console.error('오류 발생:', error);
+            });
+  }
+
+</script>
+
+</body>
+</html>
