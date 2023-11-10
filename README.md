@@ -1,6 +1,6 @@
 # 이화여자대학교 컴퓨터공학전공 캡스톤디자인프로젝트 그로쓰 02팀
 
-> 프로젝트 주제 : 청소년 대상 어휘력/문해력/취향 맞춤형 도서 추천 서비스
+> 프로젝트 주제 : 청소년 대상 어휘력/문해력/취향 맞춤형 도서 추천 서비스
 > 서비스 명 : GUIDE:BOOK  
 > 팀명 : 가이드북  
 > 프로젝트 기간 : 2023.03.02 ~ 2023.11.24 
@@ -23,14 +23,14 @@
 |    김지현     |    BE, 데이터베이스 관리     |  [Github](https://github.com/wlgus253254)     |
 
 
-
+#📁프로젝트 구조
 ## 📁기술 스택
 
 |     분류      |                                                                                                                                        기술                                                                                                                                         |
 | :-----------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |   Front-end   |                                                                                                      <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">                                                                                                     |
 |   Back-end    | <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> <img src="https://img.shields.io/badge/flask-000000?style=for-the-badge&logo=flask&logoColor=white">  |
-|      ML       |                                                                    <img src="https://img.shields.io/badge/scikitlearn-F7931E?logo=scikitlearn"> <img src="https://img.shields.io/badge/Python-3.7-blue?logo=python">                                                                     |
+|      ML       |                                                                    <img src="https://img.shields.io/badge/scikitlearn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white">                      <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white">                                                     |
 |      DB       |                                                                                                         <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">                                                                                                       |
 
 
