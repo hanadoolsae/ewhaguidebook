@@ -17,7 +17,10 @@ def create_app():
     app.config['SQLALCHEMY_POOL_SIZE'] = 30
     app.config['SQLALCHEMY_MAX_OVERFLOW'] = 10
 
+    # SQLAlchemy 인스턴스에 앱을 등록합니다.
     db.init_app(app)
+
+    # CORS 설정
     CORS(app, resources={r"/*": {"origins": "*"}})
 
     # 첫 번째 요청 전에 실행할 작업 설정
@@ -26,9 +29,8 @@ def create_app():
         db.create_all()
 
     # Blueprint 등록
-    with app.app_context():
-        from apis.recommendation import recommendation_blueprint
-        app.register_blueprint(recommendation_blueprint, url_prefix="/ml/api/recommend")
+    from apis.recommendation import recommendation_blueprint
+    app.register_blueprint(recommendation_blueprint, url_prefix="/ml/api/recommend")
 
     return app
 
