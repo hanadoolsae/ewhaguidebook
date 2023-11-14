@@ -1,4 +1,4 @@
-from app import db  # SQLAlchemy 인스턴스를 app.py로부터 임포트
+from db import db  # 변경된 임포트 경로
 
 class MemberGenre(db.Model):
     __tablename__ = "member_genre_table"

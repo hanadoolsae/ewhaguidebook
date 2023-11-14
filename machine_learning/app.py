@@ -1,9 +1,6 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from db import db  # 별도의 db.py 파일에서 db 인스턴스를 임포트합니다.
 from flask_cors import CORS
-
-# 전역 변수로 db 인스턴스를 설정합니다.
-db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
@@ -26,7 +23,7 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-        # Blueprint 등록을 위해 임포트 위치 변경
+        # Blueprint 등록
         from apis.recommendation import recommendation_blueprint
         app.register_blueprint(recommendation_blueprint, url_prefix="/ml/api/recommend")
 
