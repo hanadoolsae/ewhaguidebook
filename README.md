@@ -4,9 +4,9 @@
 > 서비스 명 : GUIDE:BOOK  <br/><br/>
 > 팀명 : 가이드북 <br/><br/>
 > 프로젝트 기간 : 2023.03.02 ~ 2023.11.24 <br/><br/>
-> 배포 주소 : http://ewha02guidebook.cafe24.com
+> 배포 주소 : http://ewhaguidebook.com/
 
-# 📚[GUIDE:BOOK](http://ewha02guidebook.cafe24.com)이란?
+# 📚[GUIDE:BOOK](http://ewhaguidebook.com/)이란?
 
 **청소년 대상 어휘력/문해력/취향 맞춤형 도서 추천 서비스**
 
