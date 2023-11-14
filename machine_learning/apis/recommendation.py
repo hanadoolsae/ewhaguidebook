@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, Blueprint, current_app, g
 from flask_restx import Api, Resource
+from db import db
 
 import numpy as np
 import pandas as pd
@@ -223,7 +224,6 @@ def get_difficulty_preference(member_grade, member_level):
 @recommendation_blueprint.route('/recommendations/similar_books/<int:member_id>', methods=['GET'])
 def similar_books(member_id):
     try:
-        db_instance = current_app.extensions['sqlalchemy'].db
         random_book_title_encoded = request.args.get('randomLikedOrCompletedBookTitle')
 
         # random_book_title_encoded가 None인 경우를 처리
