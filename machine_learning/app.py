@@ -17,13 +17,10 @@ def create_app():
     app.config['SQLALCHEMY_POOL_SIZE'] = 30
     app.config['SQLALCHEMY_MAX_OVERFLOW'] = 10
 
-    # SQLAlchemy 인스턴스에 앱을 등록합니다.
     db.init_app(app)
-
-    # CORS 설정
     CORS(app, resources={r"/*": {"origins": "*"}})
 
-    # 필요한 경우, 첫 번째 요청 전에 실행할 작업을 설정합니다.
+    # 첫 번째 요청 전에 실행할 작업 설정
     @app.before_first_request
     def create_database():
         db.create_all()
