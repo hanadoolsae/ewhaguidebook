@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, app
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_restx import Api
@@ -35,5 +35,4 @@ def create_app():
     return app
 
 if __name__ == "__main__":
-    app = create_app()
     app.run(host='0.0.0.0', port=5000)
