@@ -23,14 +23,13 @@ def create_app():
     # CORS 설정
     CORS(app, resources={r"/*": {"origins": "*"}})
 
-    # 첫 번째 요청 전에 실행할 작업 설정
-    @app.before_first_request
-    def create_database():
+    # 앱 컨텍스트 내에서 데이터베이스를 초기화합니다.
+    with app.app_context():
         db.create_all()
 
-    # Blueprint 등록
-    from apis.recommendation import recommendation_blueprint
-    app.register_blueprint(recommendation_blueprint, url_prefix="/ml/api/recommend")
+        # Blueprint 등록
+        from apis.recommendation import recommendation_blueprint
+        app.register_blueprint(recommendation_blueprint, url_prefix="/ml/api/recommend")
 
     return app
 
