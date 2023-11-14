@@ -6,9 +6,6 @@ from flask_restx import Api
 # 전역 변수로 db 인스턴스를 설정합니다.
 db = SQLAlchemy()
 
-
-
-
 def create_app():
     app = Flask(__name__)
 
@@ -20,18 +17,24 @@ def create_app():
     app.config['SQLALCHEMY_POOL_SIZE'] = 30
     app.config['SQLALCHEMY_MAX_OVERFLOW'] = 10
 
+    # SQLAlchemy 인스턴스에 앱을 등록합니다.
     db.init_app(app)
+
+    # CORS 설정
     CORS(app, resources={r"/*": {"origins": "*"}})
 
-    # Blueprint 등록을 위해 아래의 코드로 변경합니다.
+    # 필요한 경우, 첫 번째 요청 전에 실행할 작업을 설정합니다.
+    @app.before_first_request
+    def create_database():
+        db.create_all()
+
+    # Blueprint 등록
     with app.app_context():
-        from apis.recommendation import recommendation_blueprint  # 여기로 이동
+        from apis.recommendation import recommendation_blueprint
         app.register_blueprint(recommendation_blueprint, url_prefix="/ml/api/recommend")
 
     return app
 
-
 if __name__ == "__main__":
     app = create_app()
     app.run(host='0.0.0.0', port=5000)
-
