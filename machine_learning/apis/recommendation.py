@@ -321,59 +321,64 @@ def similar_major_and_grade(member_id):
         Member.member_major == member.member_major,
         Member.id != member_id
     ).all()
-    if similar_members:
-        similar_members_ids = [u.id for u in similar_members]
-        current_app.logger.info(f"Found {len(similar_members)} similar members.")
-    else:
-        current_app.logger.info(f"No similar members found for member ID: {member_id}")
-        similar_members_ids = []
 
-    # 로그를 끼워넣습니다 - 완독한 책과 위시리스트에 담은 책의 ID를 가져오기
-    current_app.logger.info(f"Fetching completed books and wishlist for similar members.")
-    completed_books = MemberMyBook.query.filter(
-        MemberMyBook.member_entity_id.in_(similar_members_ids),
+    if not similar_members:
+        current_app.logger.info(f"No similar members found for member ID: {member_id}")
+        return jsonify({"message": "No similar members found"}), 404
+
+    similar_members_ids = [u.id for u in similar_members]
+    current_app.logger.info(f"Found {len(similar_members)} similar members.")
+
+    # 현재 사용자의 완독 및 좋아요 도서 목록 가져오기
+    current_user_books = set()
+    current_user_completed_books = MemberMyBook.query.filter(
+        MemberMyBook.member_entity_id == member_id,
         MemberMyBook.status == 1
     ).all()
-    similar_members_wishlist = MemberMyLike.query.filter(
-        MemberMyLike.member_entity_id.in_(similar_members_ids)
+    current_user_liked_books = MemberMyLike.query.filter(
+        MemberMyLike.member_entity_id == member_id
     ).all()
 
-    current_app.logger.info(f"Combining book IDs from completed books and wishlist.")
-    book_ids = {book.book_entity_id for book in completed_books}
-    wishlist_ids = {like.book_entity_id for like in similar_members_wishlist}  # 여기도 모델 정의에 맞게 필드명 사용
-    combined_book_ids = book_ids.union(wishlist_ids)
+    for book in current_user_completed_books + current_user_liked_books:
+        current_user_books.add(book.book_entity_id)
 
-    current_app.logger.info(f"Fetching recommended books based on combined book IDs.")
-    recommended_books = Book.query.filter(Book.id.in_(combined_book_ids)).all()
+    # 모든 비슷한 사용자의 도서 목록과 중복 횟수 계산
+    all_user_books = {}
+    for user_id in similar_members_ids:
+        user_books = MemberMyBook.query.filter(
+            MemberMyBook.member_entity_id == user_id,
+            MemberMyBook.status == 1
+        ).all()
+        user_liked_books = MemberMyLike.query.filter(
+            MemberMyLike.member_entity_id == user_id
+        ).all()
 
-    # 책 정보를 딕셔너리 형태로 변환하여 반환
-    current_app.logger.info(f"Converting recommended books to dictionaries.")
-    recommended_books_dicts = [book.as_dict() for book in recommended_books]
+        for book in user_books + user_liked_books:
+            book_id = book.book_entity_id
+            all_user_books[book_id] = all_user_books.get(book_id, 0) + 1
 
-    # 멤버의 전공에 해당하는 임베딩 인덱스 찾기
-    member_major = member.member_major
-    major_index = np.where(majors == member_major)[0][0] if member_major in majors else None
+    # 협업 필터링을 통해 찾은 도서 중 현재 사용자의 도서 목록과 중복되지 않는 것들만 추천 목록에 추가
+    collaborative_book_ids = set(all_user_books.keys()) - current_user_books
+    collaborative_recommendations = Book.query.filter(Book.id.in_(collaborative_book_ids)).all()
+    recommended_books_dicts = [book.as_dict() for book in collaborative_recommendations]
 
-    # 각 책의 전공과의 유사도를 계산
-    if major_index is not None:
-        for book in recommended_books_dicts:
-            book_id_index = book['id'] - 1  # 책의 ID가 1부터 시작한다고 가정
-            book['major_similarity'] = book_major_embedding[book_id_index, major_index]
-    else:
-        for book in recommended_books_dicts:
-            book['major_similarity'] = 0  # 전공 정보가 없는 경우 유사도를 0으로 설정
+    # 책 정보에 중복 횟수 추가
+    for book in recommended_books_dicts:
+        book_id = book['id']
+        book['duplicate_count'] = all_user_books.get(book_id, 0)
 
-    # 유사도에 따라 도서 목록을 정렬
-    adjusted_recommendations = sorted(recommended_books_dicts, key=lambda x: x['major_similarity'], reverse=True)
+    # 도서 목록을 중복 횟수와 전공 유사도에 따라 정렬
+    final_recommendations = sorted(recommended_books_dicts,
+                                   key=lambda x: (-x['duplicate_count'], -x.get('major_similarity', 0)))
 
-    top_recommendations_to_log = 5  # 상위 몇 개의 항목을 로깅할지 결정
-    current_app.logger.info(f"Top {top_recommendations_to_log} adjusted recommendations (based on major similarity):")
-    for book in adjusted_recommendations[:top_recommendations_to_log]:
-        current_app.logger.info(f"Book ID: {book['id']}, Major Similarity: {book['major_similarity']}")
+    # 로깅 및 상위 6권 추천 도서 반환
+    top_six_recommendations = final_recommendations[:6]
+    current_app.logger.info("Top 6 recommendations (based on collaborative filtering and major similarity):")
+    for book in top_six_recommendations:
+        current_app.logger.info(
+            f"Book ID: {book['id']}, Duplicate Count: {book['duplicate_count']}, Major Similarity: {book.get('major_similarity', 0)}")
 
-    # 조정된 추천 도서 정보를 JSON 형태로 변환하여 반환
-    current_app.logger.info(f"Returning adjusted recommendations for member ID: {member_id}")
-    return jsonify(adjusted_recommendations)
+    return jsonify(top_six_recommendations)
 
 
 @recommendation_blueprint.route('/recommendations/similar_books_by_member/<int:member_id>')
