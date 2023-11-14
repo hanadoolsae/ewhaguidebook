@@ -36,11 +36,11 @@
 
 ## 📁시스템 아키텍쳐
 
-![시스템구조](Document/system_architecture/system_arch.png)  
+![시스템구조](document/system_arch.png)  
 
 ## 📁ERD
 
-![ERD](Document/DB/ERD_message_v2.1.png)
+![ERD](document/ERD.png)
 
 
 # 📚주요 기능
