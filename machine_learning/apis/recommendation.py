@@ -296,11 +296,12 @@ def similar_books(member_id):
 
         # 결과 반환
         logging.info("Returning recommendations.")
-        return jsonify(recommendations)
+        adjusted_recommendations = adjust_recommendations(member_id, recommendations)
+        return jsonify(adjusted_recommendations)
 
     except Exception as e:
-        logging.error(f"Unhandled exception in similar_books: {e}", exc_info=True)
-        return jsonify({"error": "An unexpected error occurred"}), 500
+       logging.error(f"Unhandled exception in similar_books: {e}", exc_info=True)
+       return jsonify({"error": "An unexpected error occurred"}), 500
 
 
 
@@ -378,7 +379,9 @@ def similar_major_and_grade(member_id):
         current_app.logger.info(
             f"Book ID: {book['id']}, Duplicate Count: {book['duplicate_count']}, Major Similarity: {book.get('major_similarity', 0)}")
 
-    return jsonify(top_six_recommendations)
+    # 추천 목록 조정
+    adjusted_recommendations = adjust_recommendations(member_id, top_six_recommendations)
+    return jsonify(adjusted_recommendations)
 
 
 @recommendation_blueprint.route('/recommendations/similar_books_by_member/<int:member_id>')
