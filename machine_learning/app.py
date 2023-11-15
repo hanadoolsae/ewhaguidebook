@@ -1,25 +1,25 @@
 from flask import Flask
-from db import db  # 별도의 db.py 파일에서 db 인스턴스를 임포트합니다.
+from db import db  
 from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
 
     # DB 설정
-    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://testuser01:1234@13.124.172.94/ewha02guidebook"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://EWHAGUIDEBOOK/ewha02guidebook"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config['SQLALCHEMY_POOL_RECYCLE'] = 600
     app.config['SQLALCHEMY_POOL_TIMEOUT'] = 10
     app.config['SQLALCHEMY_POOL_SIZE'] = 30
     app.config['SQLALCHEMY_MAX_OVERFLOW'] = 10
 
-    # SQLAlchemy 인스턴스에 앱을 등록합니다.
+    # SQLAlchemy 인스턴스에 앱을 등록
     db.init_app(app)
 
     # CORS 설정
     CORS(app, resources={r"/*": {"origins": "*"}})
 
-    # 앱 컨텍스트 내에서 데이터베이스를 초기화합니다.
+    # 앱 컨텍스트 내에서 데이터베이스 초기화
     with app.app_context():
         db.create_all()
 
