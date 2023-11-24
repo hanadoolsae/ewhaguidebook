@@ -1,0 +1,267 @@
+* {
+  box-sizing: border-box;
+  font-family: 'gmarket sans medium';
+}
+
+body {
+  padding: 10px;
+  background: white;
+}
+
+/* Header/Blog Title */
+header {
+ text-align: center;
+  background: white;
+  height: 200px;
+}
+
+h1 {
+  font-size: 50px;
+}
+
+/* Style the top navigation bar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+  background-color: #006400;
+  font-weight: bold;
+}
+
+nav form {
+  margin-right: 20px; /* 검색창을 오른쪽으로 이동 */
+}
+
+nav ul {
+  white-space: nowrap; /* 글자가 줄바꿈되지 않게 설정 */
+  gap: 5px;
+  /* 메뉴 아이템들 사이의 공백을 조정합니다. */
+}
+
+nav ul li:last-child {
+  white-space: nowrap; /* 글자가 줄바꿈되지 않게 설정 */
+  margin-right: 10px; /* "안녕하세요, 00님!" 문구와 로그아웃 사이의 공백 조정 */
+}
+
+nav ul li:nth-last-child(2) {
+  white-space: nowrap; /* 글자가 줄바꿈되지 않게 설정 */
+  margin-right: 5px; /* 로그아웃 글자 오른쪽 공백 조정 */
+}
+
+/* Style the topnav links */
+li a {
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change color on hover */
+li a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Create two unequal columns that floats next to each other */
+/* Left column */
+section {   
+  float: left;
+  width: 75%;
+}
+
+/* Right column */
+aside {
+  float: right;
+  width: 25%;
+  background-color: #ffffff;
+  padding-left: 20px;
+}
+
+/* Fake image */
+.fakeimg {
+  background-color: #aaa;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Add a card effect for articles */
+.card {
+  display: flex;
+  flex-direction: row; /* 추가: 가로로 나열되도록 변경 */
+  flex-wrap: wrap; /* 행이 꽉 차면 다음 행으로 넘어가도록 설정 */
+  justify-content: flex-start;
+  background-color: white;
+  padding: 20px;
+  margin-top: 5px;
+}
+.card h1 {
+  text-align: center; /* 제목 가운데 정렬 */
+}
+
+.book-cards {
+  display: flex;
+  flex-direction: row; /* 가로로 나열되도록 변경 */
+  flex-wrap: wrap; /* 행이 꽉 차면 다음 행으로 넘어가도록 설정 */
+  justify-content: space-between; /* 가로 공간 균등 분배 */
+  border: 4px solid#006400;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: row;
+  margin: 10px 10px; /* 마진을 좌우로 조절하여 카드들 사이의 간격을 조정 */
+  width: calc(50% - 20px);
+  border: 1px solid white;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s;
+  overflow: hidden;
+}
+
+.book-card:hover {
+  transform: scale(1.05);
+  box-shadow: 2px 2px 15px rgba(0,0,0,0.2);
+}
+
+.book-card img {
+  width: 150px;
+  height: 225px;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+.book-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+  text-align: left;
+}
+
+.book-details h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.book-details p {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+
+h2 {
+  border-bottom: 2px solid #333;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-pic img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* 원형으로 보이도록 */
+  margin-right: 20px; /* 사진과 정보 사이의 간격 조절 */
+}
+
+.profile-info h3 {
+  margin: 0;
+  font-size: 24px; /* 글자 크기 조절 */
+}
+
+.profile-info p {
+  margin: 5px 0 0; /* 마진 조절 */
+  font-size: 18px; /* 글자 크기 조절 */
+}
+
+.profile-section, .library-section {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.profile-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.profile-table th, .profile-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+
+/* Footer */
+footer {
+  padding: 20px;
+  text-align: center;
+  background: #ffffff;
+  margin-top: 20px;
+  clear: both;
+  border: 20px solid #006400;
+}
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 800px) {
+  section, aside {   
+    width: 100%;
+    padding: 0;
+  }
+}
+
+/* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
+@media screen and (max-width: 400px) {
+  nav a {
+    float: none;
+    width: 100%;
+  }
+}

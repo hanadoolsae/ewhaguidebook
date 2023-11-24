@@ -1,0 +1,54 @@
+.card{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  margin: 0;
+}
+
+.book-container {
+    display: flex;
+    align-items: center;
+    width: 800px;
+}
+
+.book-container img {
+    width: 200px;
+    height: 300px;
+    
+}
+
+.book-details {
+  text-align: center;
+    flex: 1; /* 정보 컨테이너가 나머지 공간을 차지하도록 설정 */
+    display: flex;
+    flex-direction: column; /* 내부 요소들을 세로로 정렬 */
+    align-items: center;
+}
+
+
+p {
+    font-size: 16px; /* 나머지 텍스트 요소의 폰트 크기 조정 */
+    margin: 5px 0; /* 텍스트 요소 위 아래 마진 설정 */
+}
+
+.button-container {
+  display: flex;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.button-container form {  
+  margin-right: 10px; /* 버튼 사이 간격 조정 */
+}
+
+button {
+  background-color: white;
+  border: 3px solid #006400;
+  width: 120px;
+  height: 40px;
+  color: #006400;
+  font-weight: bold;
+  margin-top: 20px;
+  cursor: pointer;
+}
