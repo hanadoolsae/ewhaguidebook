@@ -6,7 +6,7 @@ def create_app():
     app = Flask(__name__)
 
     # DB 설정
-    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://testuser01:1234@13.124.172.94/ewha02guidebook"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://EWHAGUIDEBOOK/ewha02guidebook"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config['SQLALCHEMY_POOL_RECYCLE'] = 600
     app.config['SQLALCHEMY_POOL_TIMEOUT'] = 10
