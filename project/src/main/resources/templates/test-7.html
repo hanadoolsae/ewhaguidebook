@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="/css/nav_foo.css">
+  <link rel="icon" href="/images/logo3.png">
+  <style>
+      @font-face {
+          font-family: 'G마켓 산스 Medium';
+          src: url('/font/GmarketSansMedium.otf') format('opentype');
+      }
+      *{
+          font-family: 'G마켓 산스 Medium';
+      }
+    body {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-top: 30px;
+    }
+
+    .quiz {
+      font-size: 18px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .choices {
+      list-style-type: none;
+      padding: 0;
+    }
+
+ .choice {
+            display: block;
+            margin: 10px auto;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+    .choice.selected {
+      background-color: rgb(129, 226, 171); /* 선택한 보기의 배경색 변경 */
+    }
+
+    .underline {
+      text-decoration: underline; /* 밑줄 추가 */
+    }
+    button {
+      background-color: #006400;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      margin-bottom: 40px;
+      cursor: pointer; 
+    }
+  </style>
+</head>
+<body>
+  <div class="header" style="text-align: center;">
+    <a href="/"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+  </div>
+
+<div class="quiz" style="font-weight: bold;">7. 다음은 의약품 설명서 중 일부입니다. 이를 읽고 이해한 내용으로 적절한 것은?</div>
+<div class="quiz" style="border: 2px solid #006400; padding: 10px; width: 90%; margin: 0 auto; font-size: 17px; line-height: 1.6;">이 약은 무슨 약입니까?
+  <br>
+  이 약은 성인의 인슐린 비의존성(제 2형) 당뇨병 환자의 혈당조절 개선을 위해 처방되는 약물입니다.
+  <br>
+  <br>
+  이 약은 어떻게 복용합니까?
+  <br>
+  처방의의 지시에 따라 복용합니다. 보통 이 약은 1일 1회 1정 식사와 상관없이 복용합니다.
+  <br>
+  <br>
+  다음과 같은 증상이 나타나는 경우 즉시 의사나 약사에게 알려야 합니다.
+  <br>
+  - 발목이나 다리에 체액저류나 부종이 생기는 경우
+  <br>
+  - 누워있는 동안에도 호흡이 짧아지거나 호흡에 문제가 있는 경우</div>
+<ul class="choices" style="list-style-type: none; padding: 0; text-align: center;">
+  <li class="choice" data-number="1" onclick="selectChoice(1)">① 처방의의 지시가 없더라도 반드시 식후에 복용해야 한다.</li>
+  <li class="choice" data-number="2" onclick="selectChoice(2)">② 복용 후에 발목이 갑자기 부으면 의사와 상의해야 한다.</li>
+  <li class="choice" data-number="3" onclick="selectChoice(3)">③ 당뇨병 환자뿐만 아니라 심장병 환자도 복용할 수 있다.</li>
+  <li class="choice" data-number="4" onclick="selectChoice(4)">④ 처방의의 판단에 따라 청소년 환자까지는 복용이 가능하다.</li>
+</ul>
+<button onclick="nextQuestion()">다음</button>
+<div class="footer" >
+  <h2 style="color: black">가이드북 </h2>
+<p>52, Ewhayeodae-gil, Seodaemun-gu, Seoul, Republic of Korea</p>
+<p>Contact : instagram @ewha_guidebook  e-mail guidebook@ewha.ac.kr</p>
+</div>
+
+<script>
+  let memberAnswer = 0; // 사용자가 선택한 보기의 초기값
+  const quizId = 7; // 예시: 퀴즈 ID
+
+  // 사용자가 선택한 보기를 설정하는 함수
+  function selectChoice(choiceNumber) {
+    memberAnswer = choiceNumber;
+    // 선택한 보기에 스타일 적용
+    const choices = document.querySelectorAll('.choice');
+    choices.forEach(choice => {
+      choice.classList.remove('selected');
+    });
+    document.querySelector(`.choice[data-number="${choiceNumber}"]`).classList.add('selected');
+  }
+
+  // 다음 퀴즈 페이지로 이동하는 함수
+  function nextQuestion() {
+    // 보기를 선택하지 않은 경우 안내창 표시
+    if (memberAnswer === 0) {
+      alert('정답을 선택해주세요.');
+      return;
+    }
+    // 선택한 보기와 퀴즈 ID를 서버로 전송
+    saveAnswerToServer(memberAnswer, quizId);
+    // 다음 퀴즈 페이지로 이동
+    const currentPageNumber = parseInt(window.location.pathname.split('/').pop());
+    const nextPageNumber = currentPageNumber + 1;
+    window.location.href = `/test/${nextPageNumber}`;
+  }
+
+  // 클라이언트에서 서버로 데이터를 보내는 함수
+  function saveAnswerToServer(memberAnswer, quizId) {
+    const data = {
+      memberAnswer: memberAnswer,
+      quizId: quizId,
+    };
+
+    fetch('/save-answer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+            .then(response => response.json())
+            .then(data => {
+              if(data.isCorrect) {
+                console.log('정답입니다.');
+              } else {
+                console.log('오답입니다.');
+              }
+            })
+            .catch(error => {
+              console.error('오류 발생:', error);
+            });
+  }
+
+</script>
+
+</body>
+</html>

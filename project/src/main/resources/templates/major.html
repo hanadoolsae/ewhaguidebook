@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="/css/nav_foo.css">
+  <link rel="icon" href="/images/logo3.png">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+      @font-face {
+      font-family: 'G마켓 산스 Medium';
+      src: url('/font/GmarketSansMedium.otf') format('opentype');
+  }
+  *{
+      font-family: 'G마켓 산스 Medium';
+  }
+
+    button{
+      background-color: #006400;
+      border: none;
+      border-radius: 30px;
+      color: white;
+      width: 50px; height: 40px;
+      margin-left:10px;
+      cursor: pointer;
+    }
+
+    .form-control {
+      width: 300px;
+      height: 40px;
+      border: none;
+      border-bottom: 3px solid #006400;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      text-align: center;
+      margin-left: 20px;
+    }
+
+    h2{
+      color: #006400;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="header" style="text-align: center;">
+  <a href="/"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+</div>
+
+
+
+<div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+  <h2>희망 학과 선택</h2>
+  <form action="/member/major" method="post" style="display: flex; flex-direction: column; align-items: center;">
+    <!-- 검색어 입력 필드와 검색 버튼을 감싸는 div 추가 -->
+    <div style="display: flex; align-items: center;">
+      <!-- 검색어 입력 필드 -->
+      <input type="text" name="majorName" class="form-control" id="search" placeholder="희망하는 학과를 검색하세요!">
+
+
+      <!-- 검색 버튼 -->
+      <button type="button" class="btn btn-success bi bi-search" onclick="majorCheck()">검색</button>
+    </div>
+
+    <!-- 검색 결과 표시 -->
+    <div id="searchResult"></div>
+
+    <!-- 선택한 결과를 저장할 hidden input -->
+    <input type="hidden" name="selectedMajor" id="selectedMajor">
+
+    <!-- "다음" 버튼 -->
+    <button type="submit" id="test-start" style="width: 80px; height: 40px; margin-top: 20px;">다음</button>
+  </form>
+
+
+
+
+  <script>
+    let selectedResult = null; // 선택한 결과를 저장할 변수
+
+    const majorCheck = () => {
+      const major = document.getElementById("search").value; // 변수 추가
+
+      const searchResultDiv = $("#searchResult"); // 이 부분도 추가됩니다.
+
+      $.post({
+        url: "/member/major-search",
+        contentType: "application/json",
+        data: JSON.stringify({ keyword: major }),
+        success: function (data) {
+          console.log(data);
+          searchResultDiv.html(""); // 결과를 초기화
+
+          if (data && data.length > 0) {
+            data.forEach(function (result) {
+              const resultElement = $(`<p onclick="selectMajor('${result}');">${result}</p>`);
+              searchResultDiv.append(resultElement);
+            });
+          } else {
+            searchResultDiv.html("검색 결과가 없습니다.");
+          }
+        }
+      });
+    }
+
+
+    const selectMajor = (selectedValue) => {
+      if (selectedResult) {
+        // 이전에 선택된 결과의 색상을 원래대로 돌려놓기
+        $(`p:contains(${selectedResult})`).css('color', 'black');
+      }
+
+      // 새로 선택된 결과의 색상을 변경
+      $(`p:contains(${selectedValue})`).css('color', 'green');
+
+      selectedResult = selectedValue;
+      document.getElementById("selectedMajor").value = selectedResult; // 선택된 결과값을 hidden input에 저장
+    }
+
+    document.querySelector('form').addEventListener('submit', function(event) {
+      if (!selectedResult) {
+        event.preventDefault();
+        if (confirm("학과를 선택하지 않았습니다. 그대로 다음으로 진행하시겠습니까?")) {
+          // '예'를 선택한 경우
+          // 다음 페이지로 이동
+          window.location.href = '/test/start';
+        } else {
+          // '아니요'를 선택한 경우
+          // 다음으로 넘어가지 않음
+        }
+      }
+    });
+  </script>
+</div>
+
+<div class="footer" >
+  <h2 style="color: black">가이드북 </h2>
+  <p>52, Ewhayeodae-gil, Seodaemun-gu, Seoul, Republic of Korea</p>
+  <p>Contact : instagram @ewha_guidebook  e-mail guidebook@ewha.ac.kr</p>
+</div>
+
+</body>
+</html>

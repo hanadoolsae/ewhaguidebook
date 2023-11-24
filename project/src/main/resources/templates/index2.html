@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/nav_foo.css">
+  <link rel="stylesheet" type="text/css" href="/css/card.css">
+    <link rel="icon" href="/images/logo3.png">
+    <style>
+        @font-face {
+            font-family: 'G마켓 산스 Medium';
+            src: url('/font/GmarketSansMedium.otf') format('opentype');
+        }
+
+        *{
+            font-family: 'G마켓 산스 Medium';
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+   <a class="no-hover" th:if="${#session.getAttribute('loginEmail') != null}">안녕하세요, [[${#session.getAttribute('loginName')}]]님!</span></a>
+    <a href="/member/logout"  th:if="${#session == null or #session.getAttribute('loginEmail') != null}">로그아웃</a>
+    <a href="/member/mypage"> 마이페이지</a>
+</div>
+
+<div class="header" style="text-align: center;">
+  <a href="/recommendationsuccess"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+
+    <form action="/book/search" method="post" onsubmit="return validateSearch()" style="display: inline-block; text-align: center;">
+        <input type="text" name="searchKeyword" id="searchKeyword" placeholder="읽고 싶은 책을 검색해 보세요!" style="width: 500px; height: 40px; background-color: white; color: #006400; border-top: none; border-left: none; border-right: none; border-bottom: 5px solid #006400; padding: 5px; font-family: 'G마켓 산스 Bold' !important; font-weight: bold; text-align: center;">
+        <button type="submit" style="background-color: white; border: 3px solid #ffffff; width: 50px; height: 40px; color: #006400; font-weight: bold;">검색</button>
+    </form>
+</div>
+
+
+<!-- 내 정보 기반 추천 도서 목록 -->
+<div class="card" th:if="${customBooksRecommendations != null}">
+  <h2 th:text="${session.loginName + '님의 맞춤 추천도서'}"></h2>
+  <div class="book-cards">
+      <!-- 책 카드를 클릭하면 해당 책의 상세 페이지로 이동 -->
+      <div th:each="book : ${customBooksRecommendations}" class="book-card">
+          <a th:href="@{'/book/detail/' + ${book.id}}" class="no-decoration">
+              <img th:src="${book.bookImage}" alt="책 이미지" style="height:150px; float:left; margin-right: 20px;">
+              <div class="book-details">
+                  <h3 th:text="${book.bookName}"></h3>
+                  <p th:text="'저자: ' + ${book.bookAuthor}"></p>
+                  <p th:text="'출판사: ' + ${book.bookPublisher}"></p>
+              </div>
+          </a>
+      </div>
+  </div>
+</div>
+
+
+<!-- 전공학년 기반  도서 목록 -->
+<div class="card" th:if="${majorAndGradeRecommendations != null}">
+    <h2 th:text="${session.major} + '에 관심있는 ' + ${session.grade} + '이 좋아하는 책'"></h2>
+    <div class="book-cards">
+        <!-- 책 카드를 클릭하면 해당 책의 상세 페이지로 이동 -->
+        <div th:each="book : ${majorAndGradeRecommendations}" class="book-card">
+            <a th:href="@{'/book/detail/' + ${book.id}}" class="no-decoration">
+                <img th:src="${book.bookImage}" alt="책 이미지" style="height:150px; float:left; margin-right: 20px;">
+                <div class="book-details">
+                    <h3 th:text="${book.bookName}"></h3>
+                    <p th:text="'저자: ' + ${book.bookAuthor}"></p>
+                    <p th:text="'출판사: ' + ${book.bookPublisher}"></p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- 내서재 기반 추천 도서 목록 -->
+<div class="card" th:if="${similarBookRecommendations != null and similarBookRecommendations.length > 0 and !(session.randomLikedOrCompletedBookTitle == null or session.randomLikedOrCompletedBookTitle.equals('No favorite or completed books found'))}">
+    <h2 th:text="'\'' + ${session.randomLikedOrCompletedBookTitle} + '\'' + '과(와) 비슷한 책'"></h2><br>
+    <div class="book-cards">
+        <!-- 책 카드를 클릭하면 해당 책의 상세 페이지로 이동 -->
+        <div th:each="book : ${similarBookRecommendations}" class="book-card">
+            <a th:href="@{'/book/detail/' + ${book.id}}" class="no-decoration">
+                <img th:src="${book.bookImage}" alt="책 이미지" style="height:150px; float:left; margin-right: 20px;">
+                <div class="book-details">
+                    <h3 th:text="${book.bookName}">책 이름</h3>
+                    <p th:text="'저자: ' + ${book.bookAuthor}">저자 이름</p>
+                    <p th:text="'출판사: ' + ${book.bookPublisher}">출판사 이름</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="footer" >
+    <h2>가이드북 </h2>
+  <p>52, Ewhayeodae-gil, Seodaemun-gu, Seoul, Republic of Korea</p>
+  <p>Contact : instagram @ewha_guidebook  e-mail guidebook@ewha.ac.kr</p>
+</div>
+
+<script th:inline="javascript">
+
+  window.onload = function() {
+      const recommendedBooksTitleElement = document.getElementById("recommendedBooksTitle");
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1;
+      recommendedBooksTitleElement.innerText = `${currentMonth}월의 인기도서`;
+  };
+
+  function checkSessionAndRedirect() {
+      alert("로그인이 필요합니다.");
+  }
+
+  function validateSearch() {
+      var searchInput = document.getElementById('bookTitle').value;
+      if (searchInput.trim() === '') {
+          alert('검색어를 입력하세요.');
+          return false;
+      }
+      return true;
+  }
+
+  function copyToClipboard(text) {
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      alert(`책 제목이 클립보드에 복사되었습니다
+      ${text}`);
+  }
+
+</script>
+</body>
+</html>

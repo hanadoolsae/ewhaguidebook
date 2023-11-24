@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/nav_foo.css">
+    <link rel="icon" href="/images/logo3.png">
+  <style>
+      @font-face {
+          font-family: 'G마켓 산스 Medium';
+          src: url('/font/GmarketSansMedium.otf') format('opentype');
+      }
+      *{
+          font-family: 'G마켓 산스 Medium';
+      }
+      body {
+          text-align: center;
+      }
+
+    h1 {
+      font-size: 28px;
+      margin-top: 30px;
+    }
+
+    .quiz {
+      font-size: 18px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .choices {
+      list-style-type: none;
+      padding: 0;
+    }
+
+ .choice {
+            display: block;
+            margin: 10px auto;
+            padding: 20px;
+            cursor: pointer;
+        }
+
+    .choice.selected {
+      background-color: rgb(129, 226, 171); /* 선택한 보기의 배경색 변경 */
+    }
+
+    .underline {
+      text-decoration: underline; /* 밑줄 추가 */
+    }
+    button {
+      background-color: #006400;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      margin-bottom: 40px;
+      cursor: pointer; 
+    }
+  </style>
+</head>
+<body>
+  <div class="header" style="text-align: center;">
+    <a href="/"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+  </div>
+<div class="quiz" style="font-weight: bold;">9. 다음의 내용에 따라 ( ) 안에 들어갈 결론으로 옳은 것은? </div>
+<div class="quiz" style="border: 2px solid #006400; padding: 10px; width: 90%; margin: 0 auto; font-size: 17px; line-height: 1.6;">A가 운동선수가 아니라면 무용수이다.
+  <br>그런데 모든 무용수는 흰색 재킷을 입는다. 그러나 A는 초록색 재킷을 입는다.
+  <br>만약 A가 운동선수라면, 그는 미국인이거나 독일인이다.
+  <br>그런데 어느 독일인도 한국 생활 경험이 없다면 김치를 먹을 줄 모른다. 그런데 A는 김치를 먹을 줄 안다.
+  <br>그리고 한국 생활을 경험한 운동선수들은 모두 흰색 재킷을 입는다. 따라서 A는 ( ).</div>
+<ul class="choices">
+  <li class="choice" data-number="1" onclick="selectChoice(1)">① 미국인 운동선수이다.</li>
+  <li class="choice" data-number="2" onclick="selectChoice(2)">② 한국 생활 경험이 없는 독일인이다.</li>
+  <li class="choice" data-number="3" onclick="selectChoice(3)">③ 무용수이면서 운동선수이다. </li>
+  <li class="choice" data-number="4" onclick="selectChoice(4)">④ 한국 생활 경험이 없는 미국인이다.</li>
+</ul>
+<button onclick="nextQuestion()">다음</button>
+
+<div class="footer" >
+  <h2 style="color: black">가이드북 </h2>
+<p>52, Ewhayeodae-gil, Seodaemun-gu, Seoul, Republic of Korea</p>
+<p>Contact : instagram @ewha_guidebook  e-mail guidebook@ewha.ac.kr</p>
+</div>
+
+<script>
+  let memberAnswer = 0; // 사용자가 선택한 보기의 초기값
+  const quizId = 9; // 예시: 퀴즈 ID
+
+  // 사용자가 선택한 보기를 설정하는 함수
+  function selectChoice(choiceNumber) {
+    memberAnswer = choiceNumber;
+    // 선택한 보기에 스타일 적용
+    const choices = document.querySelectorAll('.choice');
+    choices.forEach(choice => {
+      choice.classList.remove('selected');
+    });
+    document.querySelector(`.choice[data-number="${choiceNumber}"]`).classList.add('selected');
+  }
+
+  // 다음 퀴즈 페이지로 이동하는 함수
+  function nextQuestion() {
+    // 보기를 선택하지 않은 경우 안내창 표시
+    if (memberAnswer === 0) {
+      alert('정답을 선택해주세요.');
+      return;
+    }
+    // 선택한 보기와 퀴즈 ID를 서버로 전송
+    saveAnswerToServer(memberAnswer, quizId);
+    // 다음 퀴즈 페이지로 이동
+    const currentPageNumber = parseInt(window.location.pathname.split('/').pop());
+    const nextPageNumber = currentPageNumber + 1;
+    window.location.href = `/test/${nextPageNumber}`;
+  }
+
+  // 클라이언트에서 서버로 데이터를 보내는 함수
+  function saveAnswerToServer(memberAnswer, quizId) {
+    const data = {
+      memberAnswer: memberAnswer,
+      quizId: quizId,
+    };
+
+    fetch('/save-answer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+            .then(response => response.json())
+            .then(data => {
+              if(data.isCorrect) {
+                console.log('정답입니다.');
+              } else {
+                console.log('오답입니다.');
+              }
+            })
+            .catch(error => {
+              console.error('오류 발생:', error);
+            });
+  }
+
+</script>
+
+</body>
+</html>

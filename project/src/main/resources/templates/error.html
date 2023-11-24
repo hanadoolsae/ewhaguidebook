@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error Page</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    @font-face {
+      font-family: 'G마켓 산스 Medium';
+      src: url('/font/GmarketSansMedium.otf') format('opentype');
+      /* 추가 포맷이나 폴백 경로도 여기에 추가할 수 있습니다. */
+    }
+    body {
+      text-align: center;
+      font-family: 'G마켓 산스 Medium';
+    }
+
+    /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 800px) {
+  section, aside {   
+    width: 100%;
+    padding: 0;
+  }
+}
+
+/* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
+@media screen and (max-width: 400px) {
+  nav a {
+    float: none;
+    width: 100%;
+  }
+}
+  </style>
+</head>
+<body>
+<div class="error-container">
+  <a href="/" class="button">Go back to home</a>
+</div>
+</body>
+</html>

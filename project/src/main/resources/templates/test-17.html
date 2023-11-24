@@ -1,0 +1,146 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="/css/nav_foo.css">
+  <link rel="icon" href="/images/logo3.png">
+  <style>
+      @font-face {
+          font-family: 'G마켓 산스 Medium';
+          src: url('/font/GmarketSansMedium.otf') format('opentype');
+      }
+      *{
+          font-family: 'G마켓 산스 Medium';
+      }
+      body {
+          text-align: center;
+      }
+
+    h1 {
+      font-size: 28px;
+      margin-top: 30px;
+    }
+
+    .quiz {
+      font-size: 18px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .choices {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .choice {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 500px;
+      cursor: pointer;
+    }
+
+    .choice.selected {
+      background-color: rgb(129, 226, 171); /* 선택한 보기의 배경색 변경 */
+    }
+
+    .underline {
+      text-decoration: underline; /* 밑줄 추가 */
+    }
+    button {
+      background-color: #006400;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      margin-bottom: 40px;
+      cursor: pointer; 
+    }
+  </style>
+</head>
+<body>
+  <div class="header" style="text-align: center;">
+    <a href="/"><img src="/images/logo3.png" alt="로고" style="width: 500px; height: 250px; display: block; margin: 0 auto;"></a>
+  </div>
+
+<div class="quiz" style="font-weight: bold;">7. 다음은 어떤 심리학 실험의 결과를 소개한 것이다. 이를 바탕으로 추론한 내용으로 가장 적절한 것은?</div>
+<div class="quiz" style="border: 2px solid #006400; padding: 10px; width: 90%; margin: 0 auto; font-size: 17px; line-height: 1.6;">
+  사람들은 자신의 입장에 부합하는 글들을 읽을 때에는 논리적이고 합리적인 내용을 더 많이 기억했고,
+  <br>
+  반대 입장에서 쓰여진 글들을 읽을 때에는 억지스럽거나 터무니 없는 내용을 더 많이 기억했다.
+</div>
+<ul class="choices">
+  <li class="choice" data-number="1" onclick="selectChoice(1)">① 사람들은 독서의 과정에서 항상 합리적으로 사고한다. </li>
+  <li class="choice" data-number="2" onclick="selectChoice(2)">② 사람들은 독서를 할 때 비논리적인 내용은 기억하지 않는다. </li>
+  <li class="choice" data-number="3" onclick="selectChoice(3)">③ 사람들은 자신과 반대되는 입장의 글은 기억하지 않는다. </li>
+  <li class="choice" data-number="4" onclick="selectChoice(4)">④ 사람들은 독서를 통해 자신의 주관적 입장을 강화한다. </li>
+</ul>
+<button onclick="nextQuestion()">다음</button>
+<div class="footer" >
+  <h2 style="color: black">가이드북 </h2>
+<p>52, Ewhayeodae-gil, Seodaemun-gu, Seoul, Republic of Korea</p>
+<p>Contact : instagram @ewha_guidebook  e-mail guidebook@ewha.ac.kr</p>
+</div>
+
+
+<script>
+  let memberAnswer = 0; // 사용자가 선택한 보기의 초기값
+  const quizId = 17; // 예시: 퀴즈 ID
+
+  // 사용자가 선택한 보기를 설정하는 함수
+  function selectChoice(choiceNumber) {
+    memberAnswer = choiceNumber;
+    // 선택한 보기에 스타일 적용
+    const choices = document.querySelectorAll('.choice');
+    choices.forEach(choice => {
+      choice.classList.remove('selected');
+    });
+    document.querySelector(`.choice[data-number="${choiceNumber}"]`).classList.add('selected');
+  }
+
+  // 다음 퀴즈 페이지로 이동하는 함수
+  function nextQuestion() {
+    // 보기를 선택하지 않은 경우 안내창 표시
+    if (memberAnswer === 0) {
+      alert('정답을 선택해주세요.');
+      return;
+    }
+    // 선택한 보기와 퀴즈 ID를 서버로 전송
+    saveAnswerToServer(memberAnswer, quizId);
+    // 다음 퀴즈 페이지로 이동
+    const currentPageNumber = parseInt(window.location.pathname.split('/').pop());
+    const nextPageNumber = currentPageNumber + 1;
+    window.location.href = `/test/${nextPageNumber}`;
+  }
+
+  // 클라이언트에서 서버로 데이터를 보내는 함수
+  function saveAnswerToServer(memberAnswer, quizId) {
+    const data = {
+      memberAnswer: memberAnswer,
+      quizId: quizId,
+    };
+
+    fetch('/resave-answer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+            .then(response => response.json())
+            .then(data => {
+              if(data.isCorrect) {
+                console.log('정답입니다.');
+              } else {
+                console.log('오답입니다.');
+              }
+            })
+            .catch(error => {
+              console.error('오류 발생:', error);
+            });
+  }
+
+</script>
+
+</body>
+</html>
