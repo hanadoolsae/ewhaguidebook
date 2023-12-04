@@ -7,6 +7,7 @@
 > 배포 주소 : http://ewhaguidebook.com/
 
 # 📚[GUIDE:BOOK](http://ewhaguidebook.com/)이란?
+![포스터](document/poster.png)
 
 **청소년 대상 어휘력/문해력/취향 맞춤형 도서 추천 서비스**
 
