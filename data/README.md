@@ -59,3 +59,7 @@ https://github.com/KLUE-benchmark/KLUE</br>
 https://cpm0722.github.io/paper-review/an-empirical-study-of-tokenization-strategies-for-various-korean-nlp-tasks</br>
 
 
+
+**📋 자세한 내용 확인은 여기서 해주세요.**
+https://hanadoolsae.tistory.com/2
+https://hanadoolsae.tistory.com/3
