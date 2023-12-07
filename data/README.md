@@ -61,5 +61,6 @@ https://cpm0722.github.io/paper-review/an-empirical-study-of-tokenization-strate
 </br>
 </br>
 **📋 자세한 내용 확인은 여기서 해주세요.**</br>
-[Bard와 GPT를 활용한 도서 난이도 판별](https://hanadoolsae.tistory.com/2)</br>
-[웹 크롤링 및 도서 임베딩 후 추천 알고리즘 적용](https://hanadoolsae.tistory.com/3)</br>
+[Bard와 GPT를 활용한 도서 난이도 판별](https://hanadoolsae.tistory.com/2)
+[웹 크롤링 및 도서 임베딩 후 추천 알고리즘 적용](https://hanadoolsae.tistory.com/3)
+
