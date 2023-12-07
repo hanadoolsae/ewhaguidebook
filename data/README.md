@@ -46,10 +46,8 @@ KLUE-BERT는 벤치마크 데이터인 KLUE에서 베이스라인으로 사용�
 📃 References</br>
 https://sktelecom.github.io/project/kobert/</br>
 https://github.com/SKTBrain/KoBERT</br>
-https://huggingface.co/klue/bert-base?</br>text=%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD%EC%9D%98+%EC%88%98%EB%8F%84%EB%8A%94+%5BMASK%5D+%EC%9E%85%EB%8B%88%EB%8B%A4.</br>
+https://huggingface.co/klue/bert-base?text=%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD%EC%9D%98+%EC%88%98%EB%8F%84%EB%8A%94+%5BMASK%5D+%EC%9E%85%EB%8B%88%EB%8B%A4.</br>
 https://github.com/KLUE-benchmark/KLUE</br>
 https://cpm0722.github.io/paper-review/an-empirical-study-of-tokenization-strategies-for-various-korean-nlp-tasks</br>
-</br>
-이 두 가지 모델을 사용해보았을 때, 확실히 KLUE-BERT가 사이즈가 더 커서 학습이 잘 진행되었습니다.</br>
-그래서 최종적으로 KLUE-BERT를 사용하게 되었습니다.</br>
+
 
