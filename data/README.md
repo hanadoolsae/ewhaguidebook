@@ -41,8 +41,18 @@
 
 
 
-# 🖥️ 임베딩 모델 비교
-## 한국어 모델
+# 🖥️ 임베딩 하는 법
+## 진행과정
+**1. 데이터 전처리**
+- 저희는 도서의 개요 부분을 stopwords.txt(data/embedding에 업로드 완료)를 이용하여 한국어 불용어 제거를 했으나,</br>
+책, 이야기, 글, 내용 등의 단어들이 의미없이 많이 나와 코드에 자체적으로 제외를 원하는 단어들을 추가해 전처리를 진행했습니다.</br>
+**2. 한국어 모델을 활용해 임베딩 후 벡터 추출**
+- 저희는 KoBERT와 KLUE-BERT 두 가지 모델을 활용해봤는데, KLUE-BERT의 정확도가 더욱 높아 KLUE-BERT로 진행하였습니다.</br>
+**3. numpy 파일로 벡터 추출**
+- flask에서 벡터간의 코사인 유사도를 파악하기 위해 numpy로 추출하였습니다.</br>
+</br>
+
+## 한국어 모델 비교
 **KoBERT(KoreanBidirectional Encoder Representations from Transformers)**</br>
 SKT에서 공개한 위키피디아, 뉴스 등에서 수집한 5천만개의 문장으로 학습된 모델입니다. </br>
 한국어의 불규칙한 언어 변화의 특성을 반영하기 위해 데이터 기반 토큰화(SentencePiece tokenizer) 기법을 적용하였으며 vocab 크기는 8002, 모델의 파라미터 크기는 92M입니다.</br>
