@@ -19,7 +19,7 @@
 
 |     이름      |            역할             |                  Contact                  |
 | :-----------: | :-------------------------: | :---------------------------------------: |
-| 류한아 (리더)   |      BE, ML 모델 개발       |  [Github](https://github.com/AntBean94)     |
+| 류한아 (리더)   |      BE, ML 모델 개발       |  [Github](https://github.com/hanadoolsae/)     |
 |    김지우     | FE                        |  [Github](https://github.com/kjw3757)       |
 |    김지현     |    BE, 데이터베이스 관리     |  [Github](https://github.com/wlgus253254)     |
 
